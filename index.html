@@ -44,7 +44,7 @@
 
         header {
             text-align: center;
-            padding: 2.5rem 1rem 1.5rem;
+            padding: 2rem 1rem 1rem;
             border-bottom: 1px solid rgba(243, 206, 114, 0.15);
             background: rgba(10, 6, 18, 0.8);
             backdrop-filter: blur(10px);
@@ -55,7 +55,7 @@
 
         .header-title {
             font-family: 'Cinzel Decorative', serif;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: var(--gold-primary);
             text-shadow: 0 0 15px rgba(243, 206, 114, 0.4);
             letter-spacing: 2px;
@@ -64,26 +64,64 @@
 
         .header-subtitle {
             font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--accent-purple);
             letter-spacing: 3px;
             text-transform: uppercase;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 2rem;
+        }
+
+        /* Question Box */
+        .question-box {
+            background: rgba(19, 13, 36, 0.8);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 1.2rem;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .question-label {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .question-input {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(10, 6, 18, 0.8);
+            border: 1px solid rgba(243, 206, 114, 0.4);
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            color: var(--gold-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .question-input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(243, 206, 114, 0.3);
         }
 
         .controls {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 1.2rem;
             flex-wrap: wrap;
         }
 
@@ -91,18 +129,15 @@
             background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
             color: #0d0814;
             border: none;
-            padding: 0.9rem 2rem;
+            padding: 0.8rem 1.8rem;
             font-family: 'Cinzel', serif;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.95rem;
             letter-spacing: 1px;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(184, 141, 42, 0.3);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .btn:hover {
@@ -121,25 +156,24 @@
         .btn-outline:hover {
             background: rgba(243, 206, 114, 0.1);
             color: var(--gold-light);
-            box-shadow: 0 0 15px rgba(243, 206, 114, 0.2);
         }
 
+        /* Disposition Croix avec cartes au format Tarot */
         .croix-layout {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
+            grid-template-rows: repeat(3, auto);
             gap: 1.5rem;
             max-width: 750px;
             margin: 0 auto;
             width: 100%;
-            aspect-ratio: 1 / 1;
-            padding: 1rem;
+            padding: 0.5rem;
         }
 
         .slot {
             background: rgba(19, 13, 36, 0.6);
             border: 1px dashed rgba(243, 206, 114, 0.3);
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -150,11 +184,16 @@
             padding: 0.5rem;
             text-align: center;
             perspective: 1000px;
+            /* Proportion exacte d'une carte de Tarot (3:5) */
+            aspect-ratio: 3 / 5;
+            width: 100%;
+            max-width: 200px;
+            justify-self: center;
         }
 
         .slot:hover {
             border-color: var(--gold-primary);
-            box-shadow: 0 0 15px rgba(243, 206, 114, 0.2);
+            box-shadow: 0 0 15px rgba(243, 206, 114, 0.3);
             background: rgba(28, 20, 54, 0.8);
         }
 
@@ -183,7 +222,7 @@
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .slot.revealed .card-inner {
@@ -195,24 +234,27 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 0.6rem;
         }
 
         .card-back {
             background: linear-gradient(135deg, #18102b, #0c0717);
             border: 2px solid var(--gold-dark);
             box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            justify-content: center;
         }
 
         .card-back-pattern {
             width: 85%;
             height: 90%;
             border: 1px solid rgba(243, 206, 114, 0.4);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -220,7 +262,7 @@
 
         .card-back-pattern::before {
             content: '❖';
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             color: var(--gold-primary);
         }
 
@@ -228,22 +270,28 @@
             background: var(--bg-card);
             border: 2px solid var(--gold-primary);
             transform: rotateY(180deg);
-            padding: 0.5rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        .card-image {
+        .card-num-badge {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            color: var(--accent-purple);
+            font-weight: 700;
+        }
+
+        .card-image-box {
             width: 100%;
-            height: 65%;
+            flex-grow: 1;
+            margin: 0.4rem 0;
             background-size: cover;
             background-position: center;
             border-radius: 4px;
-            margin-bottom: 0.3rem;
-            border: 1px solid rgba(243, 206, 114, 0.2);
+            border: 1px solid rgba(243, 206, 114, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2.2rem;
         }
 
         .card-name {
@@ -255,26 +303,20 @@
             line-height: 1.1;
         }
 
-        .card-num {
-            font-size: 0.65rem;
-            color: var(--accent-purple);
-            margin-bottom: 2px;
-        }
-
+        /* Interprétations */
         .interpretations {
-            background: rgba(19, 13, 36, 0.8);
+            background: rgba(19, 13, 36, 0.85);
             border: 1px solid var(--border-glow);
             border-radius: 8px;
-            padding: 2rem;
+            padding: 1.8rem;
             backdrop-filter: blur(5px);
-            margin-top: 1rem;
         }
 
         .interpretations-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--gold-primary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             text-align: center;
             border-bottom: 1px solid rgba(243, 206, 114, 0.2);
             padding-bottom: 0.5rem;
@@ -283,57 +325,137 @@
         .interp-grid {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         .interp-item {
-            background: rgba(28, 20, 54, 0.5);
+            background: rgba(28, 20, 54, 0.6);
             border-left: 3px solid var(--gold-primary);
             padding: 1rem;
             border-radius: 0 6px 6px 0;
-            opacity: 0.4;
-            transition: opacity 0.3s ease;
-        }
-
-        .interp-item.active {
-            opacity: 1;
-            background: rgba(28, 20, 54, 0.9);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .interp-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         .interp-pos {
             font-family: 'Cinzel', serif;
             font-weight: 700;
             color: var(--gold-primary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .interp-card-name {
             font-family: 'Cinzel', serif;
             color: var(--accent-cyan);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .interp-body {
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.4;
             color: var(--text-light);
         }
 
         .interp-rp {
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
             font-style: italic;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-dim);
             border-top: 1px dashed rgba(255,255,255,0.1);
-            padding-top: 0.4rem;
+            padding-top: 0.3rem;
+        }
+
+        .synthesis-box {
+            margin-top: 1.5rem;
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--accent-purple);
+            border-radius: 6px;
+            padding: 1.2rem;
+        }
+
+        .synthesis-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-primary);
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 2px solid var(--gold-primary);
+            border-radius: 10px;
+            max-width: 420px;
+            width: 100%;
+            padding: 1.8rem;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(243, 206, 114, 0.3);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--gold-primary);
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+
+        .modal-card-tarot {
+            width: 140px;
+            aspect-ratio: 3 / 5;
+            margin: 0 auto 1.2rem;
+            border: 2px solid var(--gold-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            background: rgba(10, 6, 18, 0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-primary);
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .modal-desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .modal-rp {
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            border-top: 1px dashed rgba(243, 206, 114, 0.3);
+            padding-top: 0.8rem;
         }
 
         .toast {
@@ -349,7 +471,7 @@
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.3s ease;
-            z-index: 1000;
+            z-index: 2000;
         }
 
         .toast.show {
@@ -357,16 +479,13 @@
             opacity: 1;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             .croix-layout {
-                gap: 0.5rem;
-                padding: 0.25rem;
+                gap: 0.6rem;
             }
             .slot-title { font-size: 0.7rem; }
             .slot-desc { display: none; }
             .card-name { font-size: 0.65rem; }
-            .header-title { font-size: 1.8rem; }
-            .header-subtitle { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -379,6 +498,11 @@
 
     <div class="container">
         
+        <div class="question-box">
+            <label class="question-label" for="user-question">🔮 Question posée aux Lames de Gemmancie</label>
+            <input type="text" id="user-question" class="question-input" placeholder="Saisissez la question de l'Arcan ici...">
+        </div>
+
         <div class="controls">
             <button class="btn" id="btn-draw">🔮 Effectuer le Tirage</button>
             <button class="btn btn-outline" id="btn-reset">🔄 Réinitialiser</button>
@@ -389,7 +513,7 @@
             <div class="slot slot-3" data-index="2">
                 <div class="slot-info">
                     <div class="slot-title">III. Le Conseil</div>
-                    <div class="slot-desc">Bâtisseurs & Sagesse</div>
+                    <div class="slot-desc">Sagesse des Bâtisseurs</div>
                 </div>
             </div>
 
@@ -410,7 +534,7 @@
             <div class="slot slot-2" data-index="1">
                 <div class="slot-info">
                     <div class="slot-title">II. L'Ombre</div>
-                    <div class="slot-desc">Les Vents Contraires</div>
+                    <div class="slot-desc">Vents Contraires</div>
                 </div>
             </div>
 
@@ -423,59 +547,74 @@
         </div>
 
         <div class="interpretations">
-            <h2 class="interpretations-title">Lecture du Cristal & Révélations</h2>
+            <h2 class="interpretations-title">Révélations & Réponses des Cartes</h2>
             <div class="interp-grid" id="interp-container">
                 <p style="text-align: center; color: var(--text-dim); font-style: italic;">
-                    Cliquez sur "Effectuer le Tirage" ou sur chaque emplacement pour révéler les cartes de Gemmancie.
+                    Procédez au tirage pour faire parler le cristal et révéler les messages cachés.
                 </p>
+            </div>
+            <div class="synthesis-box" id="synthesis-container" style="display: none;">
+                <div class="synthesis-title">🔮 Synthèse globale de la Liseuse d'Éclat</div>
+                <div id="synthesis-text" style="font-size: 0.9rem; line-height: 1.5;"></div>
             </div>
         </div>
 
     </div>
 
-    <div class="toast" id="toast">Résumé copié dans le presse-papier !</div>
+    <!-- Modal carte en grand -->
+    <div class="modal" id="card-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <div class="modal-card-tarot" id="modal-icon">❖</div>
+            <div class="modal-title" id="modal-title">Nom de la carte</div>
+            <div class="modal-desc" id="modal-desc">Description de la carte</div>
+            <div class="modal-rp" id="modal-rp">Résonance RP</div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copié !</div>
 
     <script>
         const deck = [
-            { id: 0, name: "L'Initié du Crépuscule", num: "0", icon: "🌌", desc: "Nouveau départ, saut dans l'inconnu, innocence et potentiel pur.", rp: "Un appel imprévu vers la Brume ou le début d'un nouvel Éveil.", color: "#4cc9f0" },
-            { id: 1, name: "Le Gemmologue", num: "I", icon: "💎", desc: "Maîtrise, ingéniosité, potentiel magique, création de mécanismes.", rp: "Possession des outils nécessaires pour façonner votre propre destin arcanique.", color: "#9d4edd" },
-            { id: 2, name: "La Passeuse", num: "II", icon: "⛵", desc: "Intuition, mystères enfouis, secrets de la Brume, savoir caché.", rp: "Une vérité révélée à bord du navire céleste ou une vision importante.", color: "#3a0ca3" },
-            { id: 3, name: "L'Arbre Monde", num: "III", icon: "🌳", desc: "Abondance, fertilité des Floraisons, protection, croissance.", rp: "Bénédiction de la Gem ou protection d'une communauté/Maison.", color: "#2a9d8f" },
-            { id: 4, name: "L'Impératrice Olympe", num: "IV", icon: "👑", desc: "Autorité, structure, lois de Runestia, souveraineté et discipline.", rp: "Influence des hautes sphères politiques ou responsabilité d'un rang.", color: "#e76f51" },
-            { id: 5, name: "Le Grand Bâtisseur", num: "V", icon: "🏛️", desc: "Tradition, foi polythéiste, enseignement à l'Académie, devoir.", rp: "Guidance spirituelle ou respect strict des coutumes de l'Arche.", color: "#f4a261" },
-            { id: 6, name: "Le Sang-Lien", num: "VI", icon: "⚔️", desc: "Choix de cœur, alliance entre Floraisons, dualité et dilemme.", rp: "Une décision cruciale entre loyauté envers sa maison et attachement.", color: "#e63946" },
-            { id: 7, name: "Le Navire Céleste", num: "VII", icon: "🌬️", desc: "Voyage, traversée des épreuves, détermination, victoire.", rp: "Mouvement imminent, départ de Caliste ou succès d'une expédition.", color: "#48cae4" },
-            { id: 8, name: "La Justice d'Élément", num: "VIII", icon: "⚖️", desc: "Équilibre, responsabilité des actes, vérité, arbitrage des Elfes.", rp: "Conséquence directe d'une infraction aux lois de l'Arche.", color: "#90e0ef" },
-            { id: 9, name: "L'Ermite de Morencœur", num: "IX", icon: "🕯️", desc: "Introspection, recherche de la sagesse ancienne, isolement salutaire.", rp: "Besoin de comprendre son passé avant de franchir un nouvel Éveil.", color: "#6c757d" },
-            { id: 10, name: "La Roue des Floraisons", num: "X", icon: "☸️", desc: "Destin en mouvement, opportunité, cycles de la Gem, retournement.", rp: "Un changement soudain de statut ou l'arrivée d'une opportunité unique.", color: "#ffd166" },
-            { id: 11, name: "La Force Bestiale", num: "XI", icon: "🐺", desc: "Courage, maîtrise des instincts, puissance d'un Lunatrope ou Fléau.", rp: "Dompter la bestialité intérieure ou faire preuve d'une résilience d'acier.", color: "#f72585" },
-            { id: 12, name: "Le Suspendu du Tronc", num: "XII", icon: "🍃", desc: "Lâcher-prise, sacrifice nécessaire, nouvelle perspective, pause.", rp: "Bloqué temporairement à l'Auberge du Tronc Creux pour mieux réfléchir.", color: "#7209b7" },
-            { id: 13, name: "Le Grand Exil", num: "XIII", icon: "🌑", desc: "Fin d'un cycle, transformation irréversible, métamorphose du Fléau.", rp: "Rupture totale avec l'ancienne vie sur le Crépuscule.", color: "#3f37c9" },
-            { id: 14, name: "La Tempérance Florale", num: "XIV", icon: "🌸", desc: "Harmonie, guérison des blessures, patience, mélange des arcanes.", rp: "Réconciliation ou canalisation douce de la Petite Magie.", color: "#4895ef" },
-            { id: 15, name: "Le Charme Obscurian", num: "XV", icon: "👁️", desc: "Tentation, passion dévorante, emprise émotionnelle, illusion.", rp: "Pris au piège par une émotion intense ou manipulé par un Obscurian.", color: "#560bad" },
-            { id: 16, name: "La Chute de Cïendra", num: "XVI", icon: "🔥", desc: "Bouleversement soudain, rupture des illusions, catastrophe constructive.", rp: "Un événement brutal qui révèle les fausses promesses.", color: "#d90429" },
-            { id: 17, name: "L'Éclat-en-Ciel", num: "XVII", icon: "✨", desc: "Espoir renaissant, inspiration, bonne étoile, pureté des Fées.", rp: "Un signe bienveillant dans les moments sombres.", color: "#00f5d4" },
-            { id: 18, name: "La Brume", num: "XVIII", icon: "🌫️", desc: "Doutes, illusions, dangers tapis dans l'ombre, peurs inconscientes.", rp: "Confusion mentale ou menaces dissimulées hors des remparts.", color: "#7b2cbf" },
-            { id: 19, name: "La Lumière de Solaria", num: "XIX", icon: "☀️", desc: "Clarté, succès, vérité éclatante, vitalité et joie de vivre.", rp: "Révélation au grand jour et triomphe sur l'adversité.", color: "#ffb703" },
-            { id: 20, name: "L'Éveil de la Gem", num: "XX", icon: "🔮", desc: "Renaissance, appel du destin, Cérémonie des 21 ans, seconde chance.", rp: "L'heure est venue de révéler sa véritable déclinaison magique.", color: "#fb8500" },
-            { id: 21, name: "Le Monde de l'Arche", num: "XXI", icon: "🌍", desc: "Accomplissement, unité des peuples, harmonie totale, succès ultime.", rp: "Réussite complète de la mission au sein de l'Académie.", color: "#70e000" }
+            { id: 0, name: "Le Miroir Magique", num: "I", icon: "✨", desc: "Protection suprême, annulation des énergies négatives, réussite assurée.", rp: "Votre Éclat est protégé contre les ombres. Le succès vous est acquis.", color: "#ffd166" },
+            { id: 1, name: "La Trahison", num: "II", icon: "🗡️", desc: "Non-dits, déception, illusions brisées ou personne de mauvaise foi.", rp: "Attention aux faux semblants parmi vos alliés à l'Académie.", color: "#d90429" },
+            { id: 2, name: "Le Boomerang", num: "III", icon: "🪃", desc: "Retour de situation, conséquences des actes passés, effet miroir.", rp: "Ce que vous avez semé lors des dernières Floraisons vous revient.", color: "#4895ef" },
+            { id: 3, name: "L'Échec", num: "IV", icon: "🍂", desc: "Obstacle, besoin de changer de trajectoire, leçon constructive.", rp: "Une voie fermée pour vous réorienter vers un Éveil plus pur.", color: "#6c757d" },
+            { id: 4, name: "La Correspondance", num: "V", icon: "📜", desc: "Messages, nouvelles imminentes, besoin de clarifier par les mots.", rp: "Une missive de haut rang ou un signe transmis par les Vents.", color: "#4cc9f0" },
+            { id: 5, name: "L'Éclat Présent", num: "VI", icon: "💎", desc: "Situation actuelle, vérité nue, alignement du Cristal de cœur.", rp: "Votre état d'esprit actuel face aux défis de l'Arche.", color: "#9d4edd" },
+            { id: 6, name: "Le Carrefour", num: "VII", icon: "🔀", desc: "Choix décisif, plusieurs chemins possibles, hésitation.", rp: "Une bifurcation importante entre votre Maison et votre destin personnel.", color: "#fb8500" },
+            { id: 7, name: "L'Enfermement", num: "VIII", icon: "🏰", desc: "Isolement, sentiment de blocage, repli sur soi nécessaire ou subi.", rp: "Pris au piège par vos propres doutes ou à l'écart du Conseil.", color: "#560bad" },
+            { id: 8, name: "La Victoire", num: "IX", icon: "🏆", desc: "Triomphe, reconnaissance, accomplissement des objectifs.", rp: "Couronnement de vos efforts et respect gagné auprès des vôtres.", color: "#70e000" },
+            { id: 9, name: "L'Arbre des Floraisons", num: "X", icon: "🌳", desc: "Croissance, stabilité, ancrage dans la communauté, abondance.", rp: "Bénédiction de la Gem assurant la pérennité de votre foyer.", color: "#2a9d8f" },
+            { id: 10, name: "Le Grand Exil", num: "XI", icon: "🌑", desc: "Fin d'un cycle, départ nécessaire, métamorphose profonde.", rp: "Rupture irréversible avec le Crépuscule.", color: "#3f37c9" },
+            { id: 11, name: "L'Éveil de la Gem", num: "XII", icon: "🔮", desc: "Seconde chance, révélation spirituelle, éclosion du potentiel.", rp: "Votre puissance arcanique s'apprête à se manifester pleinement.", color: "#f72585" }
         ];
 
         const slots = document.querySelectorAll('.slot');
         const interpContainer = document.getElementById('interp-container');
+        const synthesisContainer = document.getElementById('synthesis-container');
+        const synthesisText = document.getElementById('synthesis-text');
+        const questionInput = document.getElementById('user-question');
         const btnDraw = document.getElementById('btn-draw');
         const btnReset = document.getElementById('btn-reset');
         const btnCopy = document.getElementById('btn-copy');
         const toast = document.getElementById('toast');
 
+        const cardModal = document.getElementById('card-modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalRp = document.getElementById('modal-rp');
+
         let currentDraw = [null, null, null, null, null];
 
         const slotTitles = [
-            "I. L'Éclat Présent (Situation)",
+            "I. L'Éclat Présent",
             "II. L'Ombre (Vents Contraires)",
-            "III. Le Conseil (Sagesse des Bâtisseurs)",
-            "IV. La Volonté (L'Aboutissement)",
-            "V. L'Équilibre (La Synthèse)"
+            "III. Le Conseil (Sagesse)",
+            "IV. La Volonté (Aboutissement)",
+            "V. L'Équilibre (Synthèse)"
         ];
 
         function getRandomCards(count) {
@@ -489,7 +628,7 @@
             cards.forEach((card, index) => {
                 setTimeout(() => {
                     revealCard(index, card);
-                }, index * 250);
+                }, index * 200);
             });
         }
 
@@ -503,8 +642,8 @@
                         <div class="card-back-pattern"></div>
                     </div>
                     <div class="card-front">
-                        <div class="card-num">${card.num}</div>
-                        <div class="card-image" style="background-color: ${card.color}22; border-color: ${card.color}">${card.icon}</div>
+                        <div class="card-num-badge">${card.num}</div>
+                        <div class="card-image-box" style="background-color: ${card.color}22; border-color: ${card.color}">${card.icon}</div>
                         <div class="card-name">${card.name}</div>
                     </div>
                 </div>
@@ -521,10 +660,9 @@
             currentDraw = [null, null, null, null, null];
             slots.forEach((slot, index) => {
                 slot.classList.remove('revealed');
-                const title = slotTitles[index].split(' ')[1] + ' ' + (slotTitles[index].split(' ')[2] || '');
                 slot.innerHTML = `
                     <div class="slot-info">
-                        <div class="slot-title">${slotTitles[index].split(' ')[0]} ${title}</div>
+                        <div class="slot-title">${slotTitles[index]}</div>
                         <div class="slot-desc">Cliquer pour révéler</div>
                     </div>
                 `;
@@ -537,9 +675,10 @@
             if (activeCards.length === 0) {
                 interpContainer.innerHTML = `
                     <p style="text-align: center; color: var(--text-dim); font-style: italic;">
-                        Cliquez sur "Effectuer le Tirage" ou sur chaque emplacement pour révéler les cartes de Gemmancie.
+                        Procédez au tirage pour faire parler le cristal et révéler les messages cachés.
                     </p>
                 `;
+                synthesisContainer.style.display = 'none';
                 return;
             }
 
@@ -547,7 +686,7 @@
             currentDraw.forEach((card, index) => {
                 if (card) {
                     html += `
-                        <div class="interp-item active">
+                        <div class="interp-item" style="border-left-color: ${card.color}">
                             <div class="interp-header">
                                 <span class="interp-pos">${slotTitles[index]}</span>
                                 <span class="interp-card-name">${card.num} - ${card.name}</span>
@@ -559,6 +698,13 @@
                 }
             });
             interpContainer.innerHTML = html;
+
+            if (activeCards.length === 5) {
+                synthesisContainer.style.display = 'block';
+                const questionText = questionInput.value.trim();
+                let pref = questionText ? `En réponse à la question : <em>« ${questionText} »</em><br><br>` : '';
+                synthesisText.innerHTML = `${pref}L'Éclat de la situation (${currentDraw[0].name}) se heurte à la résistance de (${currentDraw[1].name}). Le Conseil recommande de suivre la voie de (${currentDraw[2].name}) afin d'aboutir à (${currentDraw[3].name}). En synthèse, l'équilibre réside dans la maîtrise de <strong>${currentDraw[4].name}</strong>.`;
+            }
         }
 
         slots.forEach(slot => {
@@ -568,8 +714,30 @@
                     const availableCards = deck.filter(c => !currentDraw.includes(c));
                     const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
                     revealCard(index, randomCard);
+                } else {
+                    openModal(currentDraw[index]);
                 }
             });
+        });
+
+        function openModal(card) {
+            modalIcon.textContent = card.icon;
+            modalIcon.style.borderColor = card.color;
+            modalIcon.style.backgroundColor = `${card.color}22`;
+            modalTitle.textContent = `${card.num} — ${card.name}`;
+            modalDesc.textContent = card.desc;
+            modalRp.innerHTML = `<strong>Résonance d'Éclat :</strong> ${card.rp}`;
+            cardModal.style.display = 'flex';
+        }
+
+        modalClose.addEventListener('click', () => {
+            cardModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === cardModal) {
+                cardModal.style.display = 'none';
+            }
         });
 
         btnDraw.addEventListener('click', drawAll);
@@ -581,16 +749,27 @@
                 return;
             }
 
-            let summary = "🔮 **TIRAGE DE GEMMANCIE — LA LISEUSE D'ÉCLAT** 🔮\n\n";
+            const qText = questionInput.value.trim();
+            let summary = "🔮 **TIRAGE DE GEMMANCIE — LA LISEUSE D'ÉCLAT** 🔮\n";
+            if (qText) {
+                summary += `❓ **Question :** *${qText}*\n\n`;
+            } else {
+                summary += "\n";
+            }
+
             currentDraw.forEach((card, index) => {
                 if (card) {
-                    summary += `**${slotTitles[index]}** : ${card.num} - ${card.name}\n`;
-                    summary += `↳ *${card.rp}*\n\n`;
+                    summary += `**${slotTitles[index]}** : ${card.name}\n`;
+                    summary += `↳ *${card.rp}*\n`;
                 }
             });
 
+            if (currentDraw.filter(c => c !== null).length === 5) {
+                summary += `\n✨ **Réponse globale :** L'équilibre réside dans la résonance de **${currentDraw[4].name}**.`;
+            }
+
             navigator.clipboard.writeText(summary).then(() => {
-                showToast("Résumé RP copié dans le presse-papier !");
+                showToast("Résumé RP copié !");
             });
         });
 
