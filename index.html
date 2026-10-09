@@ -70,12 +70,6 @@
             backdrop-filter: blur(10px);
         }
 
-        .auth-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--gold-primary);
-        }
-
         .auth-title {
             font-family: 'Cinzel Decorative', serif;
             font-size: 1.6rem;
@@ -251,11 +245,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 0.5rem;
+            padding: 0.4rem;
             text-align: center;
             perspective: 1000px;
             aspect-ratio: 3 / 5;
@@ -270,17 +264,16 @@
             background: rgba(28, 20, 54, 0.8);
         }
 
-        .slot-title {
+        .slot-header-fixed {
             font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--gold-primary);
-            margin-bottom: 0.3rem;
-            font-weight: 600;
-        }
-
-        .slot-desc {
-            font-size: 0.7rem;
-            color: var(--text-dim);
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+            padding: 0.2rem 0;
+            border-bottom: 1px solid rgba(243, 206, 114, 0.2);
+            z-index: 2;
         }
 
         .slot-1 { grid-column: 1; grid-row: 2; } /* 1: Gauche */
@@ -291,11 +284,12 @@
 
         .card-inner {
             width: 100%;
-            height: 100%;
+            flex-grow: 1;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-radius: 8px;
+            border-radius: 6px;
+            margin-top: 0.3rem;
         }
 
         .slot.revealed .card-inner {
@@ -307,13 +301,13 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 0.6rem;
+            padding: 0.5rem;
         }
 
         .card-back {
@@ -331,11 +325,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .card-back-pattern::before {
-            content: '❖';
-            font-size: 2.2rem;
+            font-size: 1.5rem;
             color: var(--gold-primary);
         }
 
@@ -356,7 +346,7 @@
         .card-image-box {
             width: 100%;
             flex-grow: 1;
-            margin: 0.4rem 0;
+            margin: 0.3rem 0;
             background-size: cover;
             background-position: center;
             border-radius: 4px;
@@ -364,12 +354,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
         }
 
         .card-name {
             font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: var(--gold-light);
             text-align: center;
@@ -404,12 +394,12 @@
         .synthesis-highlight {
             background: rgba(157, 78, 221, 0.2);
             border: 1px dashed var(--accent-purple);
-            padding: 0.8rem;
+            padding: 1rem;
             border-radius: 6px;
-            margin-top: 1rem;
+            margin-bottom: 1.2rem;
             text-align: center;
             color: var(--gold-light);
-            font-weight: 600;
+            font-size: 1rem;
         }
 
         .modal {
@@ -507,8 +497,7 @@
 
         @media (max-width: 600px) {
             .croix-layout { gap: 0.6rem; }
-            .slot-title { font-size: 0.7rem; }
-            .slot-desc { display: none; }
+            .slot-header-fixed { font-size: 0.65rem; }
             .card-name { font-size: 0.65rem; }
         }
     </style>
@@ -517,12 +506,11 @@
 
     <div id="auth-overlay">
         <div class="auth-card">
-            <div class="auth-icon">🔮</div>
             <h2 class="auth-title">GEMMANCIE</h2>
             <p class="auth-subtitle">Accès restreint au Sanctuaire</p>
             <input type="password" id="auth-pass" class="auth-input" placeholder="Entrez la Clé d'Accès..." autofocus>
             <button class="btn" id="auth-btn" style="width: 100%;">Entrer</button>
-            <div class="auth-error" id="auth-error">Clé incorrecte. Les Arcanes vous refusent l'accès.</div>
+            <div class="auth-error" id="auth-error">Clé incorrecte. Accès refusé.</div>
         </div>
     </div>
 
@@ -534,55 +522,60 @@
     <div class="container">
         
         <div class="question-box">
-            <label class="question-label" for="user-question">🔮 Question posée aux Lames de Gemmancie</label>
-            <input type="text" id="user-question" class="question-input" placeholder="Saisissez la question de l'Arcan ici...">
+            <label class="question-label" for="user-question">Question posée aux Lames de Gemmancie</label>
+            <input type="text" id="user-question" class="question-input" placeholder="Saisissez la question ici...">
         </div>
 
         <div class="controls">
-            <button class="btn" id="btn-draw">🔮 Effectuer le Tirage</button>
-            <button class="btn btn-outline" id="btn-reset">🔄 Réinitialiser</button>
-            <button class="btn btn-outline" id="btn-copy">📋 Copier le Résumé RP</button>
+            <button class="btn" id="btn-draw">Effectuer le Tirage</button>
+            <button class="btn btn-outline" id="btn-reset">Réinitialiser</button>
+            <button class="btn btn-outline" id="btn-copy">Copier le Résumé RP</button>
         </div>
 
         <div class="croix-layout">
             <div class="slot slot-3" data-index="2">
-                <div class="slot-info">
-                    <div class="slot-title">III. Le Conseil</div>
-                    <div class="slot-desc">Sagesse (Haut)</div>
+                <div class="slot-header-fixed">3. Haut (Le Conseil)</div>
+                <div class="card-inner">
+                    <div class="card-back"><div class="card-back-pattern">❖</div></div>
+                    <div class="card-front"></div>
                 </div>
             </div>
 
             <div class="slot slot-1" data-index="0">
-                <div class="slot-info">
-                    <div class="slot-title">I. L'Éclat Présent</div>
-                    <div class="slot-desc">Situation (Gauche)</div>
+                <div class="slot-header-fixed">1. Gauche (La Situation)</div>
+                <div class="card-inner">
+                    <div class="card-back"><div class="card-back-pattern">❖</div></div>
+                    <div class="card-front"></div>
                 </div>
             </div>
 
             <div class="slot slot-5" data-index="4">
-                <div class="slot-info">
-                    <div class="slot-title">V. L'Équilibre</div>
-                    <div class="slot-desc">Synthèse (Milieu)</div>
+                <div class="slot-header-fixed">5. Milieu (La Synthèse)</div>
+                <div class="card-inner">
+                    <div class="card-back"><div class="card-back-pattern">❖</div></div>
+                    <div class="card-front"></div>
                 </div>
             </div>
 
             <div class="slot slot-2" data-index="1">
-                <div class="slot-info">
-                    <div class="slot-title">II. L'Ombre</div>
-                    <div class="slot-desc">Obstacle (Droite)</div>
+                <div class="slot-header-fixed">2. Droite (L'Obstacle)</div>
+                <div class="card-inner">
+                    <div class="card-back"><div class="card-back-pattern">❖</div></div>
+                    <div class="card-front"></div>
                 </div>
             </div>
 
             <div class="slot slot-4" data-index="3">
-                <div class="slot-info">
-                    <div class="slot-title">IV. La Volonté</div>
-                    <div class="slot-desc">Résultat (Bas)</div>
+                <div class="slot-header-fixed">4. Bas (Le Résultat)</div>
+                <div class="card-inner">
+                    <div class="card-back"><div class="card-back-pattern">❖</div></div>
+                    <div class="card-front"></div>
                 </div>
             </div>
         </div>
 
         <div class="synthesis-box" id="synthesis-container" style="display: none;">
-            <div class="synthesis-title">✨ Interprétation de la Liseuse d'Éclat</div>
+            <div class="synthesis-title">Interprétation de la Liseuse d'Éclat</div>
             <div class="synthesis-text" id="synthesis-text"></div>
         </div>
 
@@ -610,7 +603,6 @@
 
         function checkAuth() {
             if (authPass.value === SECRET_KEY) {
-                // Utilisation de sessionStorage pour demander le mot de passe à chaque réouverture du site
                 sessionStorage.setItem('gemmancie_auth', SECRET_KEY);
                 authOverlay.style.display = 'none';
             } else {
@@ -627,19 +619,20 @@
             if (e.key === 'Enter') checkAuth();
         });
 
+        // Cartes avec numérotation 1, 2, 3...
         const deck = [
-            { id: 0, name: "Le Miroir Magique", num: "I", icon: "✨", desc: "Protection absolue. Tout obstacle ou mauvaise intention se brisera net.", rp: "Protection totale et succès assuré.", color: "#ffd166" },
-            { id: 1, name: "La Trahison", num: "II", icon: "🗡️", desc: "Méfiez-vous des promesses. Quelqu'un masque ses réelles intentions.", rp: "Attention aux faux alliés et aux mensonges.", color: "#d90429" },
-            { id: 2, name: "Le Boomerang", num: "III", icon: "🪃", desc: "Retour de bâton. Vous récoltez exactement ce que vous avez semé.", rp: "Les actes passés refont surface.", color: "#4895ef" },
-            { id: 3, name: "L'Échec", num: "IV", icon: "🍂", desc: "Blocage temporaire. La voie actuelle n'est pas la bonne.", rp: "Nécessité de changer de plan immédiatement.", color: "#6c757d" },
-            { id: 4, name: "La Correspondance", num: "V", icon: "📜", desc: "Nouvelles imminentes. Une décision ou un message va tout débloquer.", rp: "Une communication ou une lettre va arriver.", color: "#4cc9f0" },
-            { id: 5, name: "L'Éclat Présent", num: "VI", icon: "💎", desc: "Moment de vérité. Vous êtes au centre des attentions et du destin.", rp: "Clarté et alignement de votre situation.", color: "#9d4edd" },
-            { id: 6, name: "Le Carrefour", num: "VII", icon: "🔀", desc: "Hésitation face à deux choix. Il faut trancher sans regarder en arrière.", rp: "Un choix crucial doit être fait.", color: "#fb8500" },
-            { id: 7, name: "L'Enfermement", num: "VIII", icon: "🏰", desc: "Sentiment d'être coincé. L'isolement vous empêche d'avancer.", rp: "Vous vous isolez trop des autres.", color: "#560bad" },
-            { id: 8, name: "La Victoire", num: "IX", icon: "🏆", desc: "Succès éclatant. La réussite est garantie si vous maintenez l'effort.", rp: "Triomphe et honneur accordés.", color: "#70e000" },
-            { id: 9, name: "L'Arbre des Floraisons", num: "X", icon: "🌳", desc: "Stabilité et prospérité durable. Ancrage solide.", rp: "Abondance et protection de votre foyer.", color: "#2a9d8f" },
-            { id: 10, name: "Le Grand Exil", num: "XI", icon: "🌑", desc: "Page qui se tourne. Départ ou fin d'une relation/d'un chapitre.", rp: "Fin définitive d'un cycle.", color: "#3f37c9" },
-            { id: 11, name: "L'Éveil de la Gem", num: "XII", icon: "🔮", desc: "Transformation spirituelle majeure. Révélation d'un grand pouvoir.", rp: "Éclosion de votre plein potentiel.", color: "#f72585" }
+            { id: 0, name: "Le Miroir Magique", num: "1", icon: "✨", desc: "Protection absolue. Tout obstacle ou mauvaise intention se brisera net.", rp: "Protection totale et succès assuré.", color: "#ffd166" },
+            { id: 1, name: "La Trahison", num: "2", icon: "🗡️", desc: "Méfiez-vous des promesses. Quelqu'un masque ses réelles intentions.", rp: "Attention aux faux alliés et aux mensonges.", color: "#d90429" },
+            { id: 2, name: "Le Boomerang", num: "3", icon: "🪃", desc: "Retour de bâton. Vous récoltez exactement ce que vous avez semé.", rp: "Les actes passés refont surface.", color: "#4895ef" },
+            { id: 3, name: "L'Échec", num: "4", icon: "🍂", desc: "Blocage temporaire. La voie actuelle n'est pas la bonne.", rp: "Nécessité de changer de plan immédiatement.", color: "#6c757d" },
+            { id: 4, name: "La Correspondance", num: "5", icon: "📜", desc: "Nouvelles imminentes. Une décision ou un message va tout débloquer.", rp: "Une communication ou une lettre va arriver.", color: "#4cc9f0" },
+            { id: 5, name: "L'Éclat Présent", num: "6", icon: "💎", desc: "Moment de vérité. Vous êtes au centre des attentions et du destin.", rp: "Clarté et alignement de votre situation.", color: "#9d4edd" },
+            { id: 6, name: "Le Carrefour", num: "7", icon: "🔀", desc: "Hésitation face à deux choix. Il faut trancher sans regarder en arrière.", rp: "Un choix crucial doit être fait.", color: "#fb8500" },
+            { id: 7, name: "L'Enfermement", num: "8", icon: "🏰", desc: "Sentiment d'être coincé. L'isolement vous empêche d'avancer.", rp: "Vous vous isolez trop des autres.", color: "#560bad" },
+            { id: 8, name: "La Victoire", num: "9", icon: "🏆", desc: "Succès éclatant. La réussite est garantie si vous maintenez l'effort.", rp: "Triomphe et honneur accordés.", color: "#70e000" },
+            { id: 9, name: "L'Arbre des Floraisons", num: "10", icon: "🌳", desc: "Stabilité et prospérité durable. Ancrage solide.", rp: "Abondance et protection de votre foyer.", color: "#2a9d8f" },
+            { id: 10, name: "Le Grand Exil", num: "11", icon: "🌑", desc: "Page qui se tourne. Départ ou fin d'une relation/d'un chapitre.", rp: "Fin définitive d'un cycle.", color: "#3f37c9" },
+            { id: 11, name: "L'Éveil de la Gem", num: "12", icon: "🔮", desc: "Transformation spirituelle majeure. Révélation d'un grand pouvoir.", rp: "Éclosion de votre plein potentiel.", color: "#f72585" }
         ];
 
         const slots = document.querySelectorAll('.slot');
@@ -686,18 +679,12 @@
         function revealCard(slotIndex, card) {
             currentDraw[slotIndex] = card;
             const slot = document.querySelector(`.slot[data-index="${slotIndex}"]`);
+            const front = slot.querySelector('.card-front');
             
-            slot.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-back">
-                        <div class="card-back-pattern"></div>
-                    </div>
-                    <div class="card-front">
-                        <div class="card-num-badge">${card.num}</div>
-                        <div class="card-image-box" style="background-color: ${card.color}22; border-color: ${card.color}">${card.icon}</div>
-                        <div class="card-name">${card.name}</div>
-                    </div>
-                </div>
+            front.innerHTML = `
+                <div class="card-num-badge">${card.num}</div>
+                <div class="card-image-box" style="background-color: ${card.color}22; border-color: ${card.color}">${card.icon}</div>
+                <div class="card-name">${card.name}</div>
             `;
 
             setTimeout(() => {
@@ -709,14 +696,10 @@
 
         function resetAll() {
             currentDraw = [null, null, null, null, null];
-            slots.forEach((slot, index) => {
+            slots.forEach((slot) => {
                 slot.classList.remove('revealed');
-                slot.innerHTML = `
-                    <div class="slot-info">
-                        <div class="slot-title">${slotTitles[index]}</div>
-                        <div class="slot-desc">Cliquer pour révéler</div>
-                    </div>
-                `;
+                const front = slot.querySelector('.card-front');
+                front.innerHTML = '';
             });
             updateSynthesis();
         }
@@ -727,19 +710,19 @@
             if (activeCards.length === 5) {
                 synthesisContainer.style.display = 'block';
                 const questionText = questionInput.value.trim();
-                let pref = questionText ? `📌 **Question posée :** <em>« ${questionText} »</em><br><br>` : '';
+                let pref = questionText ? `Question posée : « ${questionText} »<br><br>` : '';
                 
                 synthesisText.innerHTML = `
                     ${pref}
-                    📍 **Situation actuelle (Gauche) :** ${currentDraw[0].name} — <em>${currentDraw[0].rp}</em><br>
-                    ⚠️ **Ce qui s'y oppose (Droite) :** ${currentDraw[1].name} — <em>${currentDraw[1].rp}</em><br>
-                    💡 **Ce qu'il faut faire (Haut) :** ${currentDraw[2].name} — <em>${currentDraw[2].rp}</em><br>
-                    🎯 **Où cela mène (Bas) :** ${currentDraw[3].name} — <em>${currentDraw[3].rp}</em>
-                    
                     <div class="synthesis-highlight">
-                        🔑 **RÉPONSE FINALE (Milieu) : ${currentDraw[4].name}**<br>
+                        <strong>Réponse claire (Synthèse) : ${currentDraw[4].name}</strong><br>
                         ${currentDraw[4].desc}
                     </div>
+                    
+                    <strong>Situation actuelle (Gauche) :</strong> ${currentDraw[0].name} — ${currentDraw[0].rp}<br>
+                    <strong>Ce qui s'y oppose (Droite) :</strong> ${currentDraw[1].name} — ${currentDraw[1].rp}<br>
+                    <strong>Ce qu'il faut faire (Haut) :</strong> ${currentDraw[2].name} — ${currentDraw[2].rp}<br>
+                    <strong>Où cela mène (Bas) :</strong> ${currentDraw[3].name} — ${currentDraw[3].rp}
                 `;
             } else {
                 synthesisContainer.style.display = 'none';
@@ -789,18 +772,18 @@
             }
 
             const qText = questionInput.value.trim();
-            let summary = "🔮 **TIRAGE EN CROIX — GEMMANCIE** 🔮\n";
+            let summary = "TIRAGE EN CROIX — GEMMANCIE\n";
             if (qText) {
-                summary += `❓ **Question :** *${qText}*\n\n`;
+                summary += `Question : ${qText}\n\n`;
             } else {
                 summary += "\n";
             }
 
-            summary += `1️⃣ **Situation (Gauche)** : ${currentDraw[0].name} (${currentDraw[0].rp})\n`;
-            summary += `2️⃣ **Obstacle (Droite)** : ${currentDraw[1].name} (${currentDraw[1].rp})\n`;
-            summary += `3️⃣ **Conseil (Haut)** : ${currentDraw[2].name} (${currentDraw[2].rp})\n`;
-            summary += `4️⃣ **Résultat (Bas)** : ${currentDraw[3].name} (${currentDraw[3].rp})\n\n`;
-            summary += `✨ **RÉPONSE FINALE (Milieu)** : **${currentDraw[4].name}**\n↳ ${currentDraw[4].desc}`;
+            summary += `RÉPONSE CLAIRE (Synthèse) : ${currentDraw[4].name}\n↳ ${currentDraw[4].desc}\n\n`;
+            summary += `1. Situation (Gauche) : ${currentDraw[0].name} — ${currentDraw[0].rp}\n`;
+            summary += `2. Obstacle (Droite) : ${currentDraw[1].name} — ${currentDraw[1].rp}\n`;
+            summary += `3. Conseil (Haut) : ${currentDraw[2].name} — ${currentDraw[2].rp}\n`;
+            summary += `4. Résultat (Bas) : ${currentDraw[3].name} — ${currentDraw[3].rp}\n`;
 
             navigator.clipboard.writeText(summary).then(() => {
                 showToast("Résumé copié !");
