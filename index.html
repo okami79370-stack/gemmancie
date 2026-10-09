@@ -42,7 +42,7 @@
             overflow-x: hidden;
         }
 
-        /* Ecran de verrouillage par mot de passe */
+        /* Écran de verrouillage par mot de passe */
         #auth-overlay {
             position: fixed;
             top: 0;
@@ -505,7 +505,7 @@
 </head>
 <body>
 
-    <!-- Ecran de Mot de Passe -->
+    <!-- Écran de Mot de Passe -->
     <div id="auth-overlay">
         <div class="auth-card">
             <div class="auth-icon">🔮</div>
@@ -592,8 +592,8 @@
     <div class="toast" id="toast">Copié !</div>
 
     <script>
-        // Mot de passe d'accès (à modifier selon tes préférences)
-        const SECRET_KEY = "Liseuse2026";
+        // Clé d'accès définie
+        const SECRET_KEY = "Gemletarot";
 
         // Vérification de l'accès
         const authOverlay = document.getElementById('auth-overlay');
@@ -603,14 +603,14 @@
 
         function checkAuth() {
             if (authPass.value === SECRET_KEY) {
-                localStorage.setItem('gemmancie_auth', 'true');
+                localStorage.setItem('gemmancie_auth', SECRET_KEY);
                 authOverlay.style.display = 'none';
             } else {
                 authError.style.display = 'block';
             }
         }
 
-        if (localStorage.getItem('gemmancie_auth') === 'true') {
+        if (localStorage.getItem('gemmancie_auth') === SECRET_KEY) {
             authOverlay.style.display = 'none';
         }
 
