@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemmancie — Le Sanctuaire de la Liseuse d'Éclat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0612;
+            --bg-secondary: #130d24;
+            --bg-card: #1c1436;
+            --gold-primary: #f3ce72;
+            --gold-light: #fef0c1;
+            --gold-dark: #b88d2a;
+            --accent-purple: #9d4edd;
+            --accent-cyan: #4cc9f0;
+            --text-light: #e8e6f0;
+            --text-dim: #9d99b3;
+            --border-glow: rgba(243, 206, 114, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem;
+            border-bottom: 1px solid rgba(243, 206, 114, 0.15);
+            background: rgba(10, 6, 18, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            color: var(--gold-primary);
+            text-shadow: 0 0 15px rgba(243, 206, 114, 0.4);
+            letter-spacing: 2px;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--accent-purple);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            color: #0d0814;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(184, 141, 42, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 206, 114, 0.5);
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gold-primary);
+            border: 1px solid var(--gold-primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(243, 206, 114, 0.1);
+            color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(243, 206, 114, 0.2);
+        }
+
+        .croix-layout {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 750px;
+            margin: 0 auto;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            padding: 1rem;
+        }
+
+        .slot {
+            background: rgba(19, 13, 36, 0.6);
+            border: 1px dashed rgba(243, 206, 114, 0.3);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .slot:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 15px rgba(243, 206, 114, 0.2);
+            background: rgba(28, 20, 54, 0.8);
+        }
+
+        .slot-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            color: var(--gold-primary);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .slot-desc {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .slot-1 { grid-column: 1; grid-row: 2; }
+        .slot-2 { grid-column: 3; grid-row: 2; }
+        .slot-3 { grid-column: 2; grid-row: 1; }
+        .slot-4 { grid-column: 2; grid-row: 3; }
+        .slot-5 { grid-column: 2; grid-row: 2; }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 6px;
+        }
+
+        .slot.revealed .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #18102b, #0c0717);
+            border: 2px solid var(--gold-dark);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .card-back-pattern {
+            width: 85%;
+            height: 90%;
+            border: 1px solid rgba(243, 206, 114, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-back-pattern::before {
+            content: '❖';
+            font-size: 1.8rem;
+            color: var(--gold-primary);
+        }
+
+        .card-front {
+            background: var(--bg-card);
+            border: 2px solid var(--gold-primary);
+            transform: rotateY(180deg);
+            padding: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 65%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            margin-bottom: 0.3rem;
+            border: 1px solid rgba(243, 206, 114, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .card-num {
+            font-size: 0.65rem;
+            color: var(--accent-purple);
+            margin-bottom: 2px;
+        }
+
+        .interpretations {
+            background: rgba(19, 13, 36, 0.8);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 2rem;
+            backdrop-filter: blur(5px);
+            margin-top: 1rem;
+        }
+
+        .interpretations-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(243, 206, 114, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .interp-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .interp-item {
+            background: rgba(28, 20, 54, 0.5);
+            border-left: 3px solid var(--gold-primary);
+            padding: 1rem;
+            border-radius: 0 6px 6px 0;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .interp-item.active {
+            opacity: 1;
+            background: rgba(28, 20, 54, 0.9);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .interp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .interp-pos {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--gold-primary);
+            font-size: 0.95rem;
+        }
+
+        .interp-card-name {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+        }
+
+        .interp-body {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-light);
+        }
+
+        .interp-rp {
+            margin-top: 0.5rem;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            border-top: 1px dashed rgba(255,255,255,0.1);
+            padding-top: 0.4rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gold-primary);
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .croix-layout {
+                gap: 0.5rem;
+                padding: 0.25rem;
+            }
+            .slot-title { font-size: 0.7rem; }
+            .slot-desc { display: none; }
+            .card-name { font-size: 0.65rem; }
+            .header-title { font-size: 1.8rem; }
+            .header-subtitle { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="header-title">GEMMANCIE</h1>
+        <p class="header-subtitle">Sanctuaire de la Liseuse d'Éclat • Résonance des Arcans</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="controls">
+            <button class="btn" id="btn-draw">🔮 Effectuer le Tirage</button>
+            <button class="btn btn-outline" id="btn-reset">🔄 Réinitialiser</button>
+            <button class="btn btn-outline" id="btn-copy">📋 Copier le Résumé RP</button>
+        </div>
+
+        <div class="croix-layout">
+            <div class="slot slot-3" data-index="2">
+                <div class="slot-info">
+                    <div class="slot-title">III. Le Conseil</div>
+                    <div class="slot-desc">Bâtisseurs & Sagesse</div>
+                </div>
+            </div>
+
+            <div class="slot slot-1" data-index="0">
+                <div class="slot-info">
+                    <div class="slot-title">I. L'Éclat Présent</div>
+                    <div class="slot-desc">La Situation</div>
+                </div>
+            </div>
+
+            <div class="slot slot-5" data-index="4">
+                <div class="slot-info">
+                    <div class="slot-title">V. L'Équilibre</div>
+                    <div class="slot-desc">La Synthèse</div>
+                </div>
+            </div>
+
+            <div class="slot slot-2" data-index="1">
+                <div class="slot-info">
+                    <div class="slot-title">II. L'Ombre</div>
+                    <div class="slot-desc">Les Vents Contraires</div>
+                </div>
+            </div>
+
+            <div class="slot slot-4" data-index="3">
+                <div class="slot-info">
+                    <div class="slot-title">IV. La Volonté</div>
+                    <div class="slot-desc">L'Aboutissement</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="interpretations">
+            <h2 class="interpretations-title">Lecture du Cristal & Révélations</h2>
+            <div class="interp-grid" id="interp-container">
+                <p style="text-align: center; color: var(--text-dim); font-style: italic;">
+                    Cliquez sur "Effectuer le Tirage" ou sur chaque emplacement pour révéler les cartes de Gemmancie.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">Résumé copié dans le presse-papier !</div>
+
+    <script>
+        const deck = [
+            { id: 0, name: "L'Initié du Crépuscule", num: "0", icon: "🌌", desc: "Nouveau départ, saut dans l'inconnu, innocence et potentiel pur.", rp: "Un appel imprévu vers la Brume ou le début d'un nouvel Éveil.", color: "#4cc9f0" },
+            { id: 1, name: "Le Gemmologue", num: "I", icon: "💎", desc: "Maîtrise, ingéniosité, potentiel magique, création de mécanismes.", rp: "Possession des outils nécessaires pour façonner votre propre destin arcanique.", color: "#9d4edd" },
+            { id: 2, name: "La Passeuse", num: "II", icon: "⛵", desc: "Intuition, mystères enfouis, secrets de la Brume, savoir caché.", rp: "Une vérité révélée à bord du navire céleste ou une vision importante.", color: "#3a0ca3" },
+            { id: 3, name: "L'Arbre Monde", num: "III", icon: "🌳", desc: "Abondance, fertilité des Floraisons, protection, croissance.", rp: "Bénédiction de la Gem ou protection d'une communauté/Maison.", color: "#2a9d8f" },
+            { id: 4, name: "L'Impératrice Olympe", num: "IV", icon: "👑", desc: "Autorité, structure, lois de Runestia, souveraineté et discipline.", rp: "Influence des hautes sphères politiques ou responsabilité d'un rang.", color: "#e76f51" },
+            { id: 5, name: "Le Grand Bâtisseur", num: "V", icon: "🏛️", desc: "Tradition, foi polythéiste, enseignement à l'Académie, devoir.", rp: "Guidance spirituelle ou respect strict des coutumes de l'Arche.", color: "#f4a261" },
+            { id: 6, name: "Le Sang-Lien", num: "VI", icon: "⚔️", desc: "Choix de cœur, alliance entre Floraisons, dualité et dilemme.", rp: "Une décision cruciale entre loyauté envers sa maison et attachement.", color: "#e63946" },
+            { id: 7, name: "Le Navire Céleste", num: "VII", icon: "🌬️", desc: "Voyage, traversée des épreuves, détermination, victoire.", rp: "Mouvement imminent, départ de Caliste ou succès d'une expédition.", color: "#48cae4" },
+            { id: 8, name: "La Justice d'Élément", num: "VIII", icon: "⚖️", desc: "Équilibre, responsabilité des actes, vérité, arbitrage des Elfes.", rp: "Conséquence directe d'une infraction aux lois de l'Arche.", color: "#90e0ef" },
+            { id: 9, name: "L'Ermite de Morencœur", num: "IX", icon: "🕯️", desc: "Introspection, recherche de la sagesse ancienne, isolement salutaire.", rp: "Besoin de comprendre son passé avant de franchir un nouvel Éveil.", color: "#6c757d" },
+            { id: 10, name: "La Roue des Floraisons", num: "X", icon: "☸️", desc: "Destin en mouvement, opportunité, cycles de la Gem, retournement.", rp: "Un changement soudain de statut ou l'arrivée d'une opportunité unique.", color: "#ffd166" },
+            { id: 11, name: "La Force Bestiale", num: "XI", icon: "🐺", desc: "Courage, maîtrise des instincts, puissance d'un Lunatrope ou Fléau.", rp: "Dompter la bestialité intérieure ou faire preuve d'une résilience d'acier.", color: "#f72585" },
+            { id: 12, name: "Le Suspendu du Tronc", num: "XII", icon: "🍃", desc: "Lâcher-prise, sacrifice nécessaire, nouvelle perspective, pause.", rp: "Bloqué temporairement à l'Auberge du Tronc Creux pour mieux réfléchir.", color: "#7209b7" },
+            { id: 13, name: "Le Grand Exil", num: "XIII", icon: "🌑", desc: "Fin d'un cycle, transformation irréversible, métamorphose du Fléau.", rp: "Rupture totale avec l'ancienne vie sur le Crépuscule.", color: "#3f37c9" },
+            { id: 14, name: "La Tempérance Florale", num: "XIV", icon: "🌸", desc: "Harmonie, guérison des blessures, patience, mélange des arcanes.", rp: "Réconciliation ou canalisation douce de la Petite Magie.", color: "#4895ef" },
+            { id: 15, name: "Le Charme Obscurian", num: "XV", icon: "👁️", desc: "Tentation, passion dévorante, emprise émotionnelle, illusion.", rp: "Pris au piège par une émotion intense ou manipulé par un Obscurian.", color: "#560bad" },
+            { id: 16, name: "La Chute de Cïendra", num: "XVI", icon: "🔥", desc: "Bouleversement soudain, rupture des illusions, catastrophe constructive.", rp: "Un événement brutal qui révèle les fausses promesses.", color: "#d90429" },
+            { id: 17, name: "L'Éclat-en-Ciel", num: "XVII", icon: "✨", desc: "Espoir renaissant, inspiration, bonne étoile, pureté des Fées.", rp: "Un signe bienveillant dans les moments sombres.", color: "#00f5d4" },
+            { id: 18, name: "La Brume", num: "XVIII", icon: "🌫️", desc: "Doutes, illusions, dangers tapis dans l'ombre, peurs inconscientes.", rp: "Confusion mentale ou menaces dissimulées hors des remparts.", color: "#7b2cbf" },
+            { id: 19, name: "La Lumière de Solaria", num: "XIX", icon: "☀️", desc: "Clarté, succès, vérité éclatante, vitalité et joie de vivre.", rp: "Révélation au grand jour et triomphe sur l'adversité.", color: "#ffb703" },
+            { id: 20, name: "L'Éveil de la Gem", num: "XX", icon: "🔮", desc: "Renaissance, appel du destin, Cérémonie des 21 ans, seconde chance.", rp: "L'heure est venue de révéler sa véritable déclinaison magique.", color: "#fb8500" },
+            { id: 21, name: "Le Monde de l'Arche", num: "XXI", icon: "🌍", desc: "Accomplissement, unité des peuples, harmonie totale, succès ultime.", rp: "Réussite complète de la mission au sein de l'Académie.", color: "#70e000" }
+        ];
+
+        const slots = document.querySelectorAll('.slot');
+        const interpContainer = document.getElementById('interp-container');
+        const btnDraw = document.getElementById('btn-draw');
+        const btnReset = document.getElementById('btn-reset');
+        const btnCopy = document.getElementById('btn-copy');
+        const toast = document.getElementById('toast');
+
+        let currentDraw = [null, null, null, null, null];
+
+        const slotTitles = [
+            "I. L'Éclat Présent (Situation)",
+            "II. L'Ombre (Vents Contraires)",
+            "III. Le Conseil (Sagesse des Bâtisseurs)",
+            "IV. La Volonté (L'Aboutissement)",
+            "V. L'Équilibre (La Synthèse)"
+        ];
+
+        function getRandomCards(count) {
+            const shuffled = [...deck].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function drawAll() {
+            resetAll();
+            const cards = getRandomCards(5);
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    revealCard(index, card);
+                }, index * 250);
+            });
+        }
+
+        function revealCard(slotIndex, card) {
+            currentDraw[slotIndex] = card;
+            const slot = document.querySelector(`.slot[data-index="${slotIndex}"]`);
+            
+            slot.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-back">
+                        <div class="card-back-pattern"></div>
+                    </div>
+                    <div class="card-front">
+                        <div class="card-num">${card.num}</div>
+                        <div class="card-image" style="background-color: ${card.color}22; border-color: ${card.color}">${card.icon}</div>
+                        <div class="card-name">${card.name}</div>
+                    </div>
+                </div>
+            `;
+
+            setTimeout(() => {
+                slot.classList.add('revealed');
+            }, 50);
+
+            updateInterpretations();
+        }
+
+        function resetAll() {
+            currentDraw = [null, null, null, null, null];
+            slots.forEach((slot, index) => {
+                slot.classList.remove('revealed');
+                const title = slotTitles[index].split(' ')[1] + ' ' + (slotTitles[index].split(' ')[2] || '');
+                slot.innerHTML = `
+                    <div class="slot-info">
+                        <div class="slot-title">${slotTitles[index].split(' ')[0]} ${title}</div>
+                        <div class="slot-desc">Cliquer pour révéler</div>
+                    </div>
+                `;
+            });
+            updateInterpretations();
+        }
+
+        function updateInterpretations() {
+            const activeCards = currentDraw.filter(c => c !== null);
+            if (activeCards.length === 0) {
+                interpContainer.innerHTML = `
+                    <p style="text-align: center; color: var(--text-dim); font-style: italic;">
+                        Cliquez sur "Effectuer le Tirage" ou sur chaque emplacement pour révéler les cartes de Gemmancie.
+                    </p>
+                `;
+                return;
+            }
+
+            let html = '';
+            currentDraw.forEach((card, index) => {
+                if (card) {
+                    html += `
+                        <div class="interp-item active">
+                            <div class="interp-header">
+                                <span class="interp-pos">${slotTitles[index]}</span>
+                                <span class="interp-card-name">${card.num} - ${card.name}</span>
+                            </div>
+                            <div class="interp-body">${card.desc}</div>
+                            <div class="interp-rp"><strong>Résonance RP :</strong> ${card.rp}</div>
+                        </div>
+                    `;
+                }
+            });
+            interpContainer.innerHTML = html;
+        }
+
+        slots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                const index = parseInt(slot.getAttribute('data-index'));
+                if (!currentDraw[index]) {
+                    const availableCards = deck.filter(c => !currentDraw.includes(c));
+                    const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+                    revealCard(index, randomCard);
+                }
+            });
+        });
+
+        btnDraw.addEventListener('click', drawAll);
+        btnReset.addEventListener('click', resetAll);
+
+        btnCopy.addEventListener('click', () => {
+            if (currentDraw.filter(c => c !== null).length === 0) {
+                showToast("Faites d'abord un tirage !");
+                return;
+            }
+
+            let summary = "🔮 **TIRAGE DE GEMMANCIE — LA LISEUSE D'ÉCLAT** 🔮\n\n";
+            currentDraw.forEach((card, index) => {
+                if (card) {
+                    summary += `**${slotTitles[index]}** : ${card.num} - ${card.name}\n`;
+                    summary += `↳ *${card.rp}*\n\n`;
+                }
+            });
+
+            navigator.clipboard.writeText(summary).then(() => {
+                showToast("Résumé RP copié dans le presse-papier !");
+            });
+        });
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
