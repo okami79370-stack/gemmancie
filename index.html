@@ -42,7 +42,6 @@
             overflow-x: hidden;
         }
 
-        /* Écran de verrouillage par mot de passe */
         #auth-overlay {
             position: fixed;
             top: 0;
@@ -283,11 +282,11 @@
             color: var(--text-dim);
         }
 
-        .slot-1 { grid-column: 1; grid-row: 2; }
-        .slot-2 { grid-column: 3; grid-row: 2; }
-        .slot-3 { grid-column: 2; grid-row: 1; }
-        .slot-4 { grid-column: 2; grid-row: 3; }
-        .slot-5 { grid-column: 2; grid-row: 2; }
+        .slot-1 { grid-column: 1; grid-row: 2; } /* Gauche */
+        .slot-2 { grid-column: 3; grid-row: 2; } /* Droite */
+        .slot-3 { grid-column: 2; grid-row: 1; } /* Haut */
+        .slot-4 { grid-column: 2; grid-row: 3; } /* Bas */
+        .slot-5 { grid-column: 2; grid-row: 2; } /* Milieu */
 
         .card-inner {
             width: 100%;
@@ -376,19 +375,20 @@
             line-height: 1.1;
         }
 
+        /* Section Réponse Finale Claires */
         .synthesis-box {
             background: rgba(19, 13, 36, 0.85);
-            border: 1px solid var(--accent-purple);
+            border: 1px solid var(--gold-primary);
             border-radius: 8px;
             padding: 1.5rem;
             backdrop-filter: blur(5px);
-            box-shadow: 0 0 20px rgba(157, 78, 221, 0.15);
+            box-shadow: 0 0 20px rgba(243, 206, 114, 0.15);
         }
 
         .synthesis-title {
             font-family: 'Cinzel', serif;
             color: var(--gold-primary);
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             margin-bottom: 0.8rem;
             text-align: center;
             border-bottom: 1px solid rgba(243, 206, 114, 0.2);
@@ -397,9 +397,19 @@
 
         .synthesis-text {
             font-size: 0.95rem;
-            line-height: 1.6;
+            line-height: 1.7;
             color: var(--text-light);
+        }
+
+        .synthesis-highlight {
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px dashed var(--accent-purple);
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-top: 1rem;
             text-align: center;
+            color: var(--gold-light);
+            font-weight: 600;
         }
 
         .modal {
@@ -505,7 +515,6 @@
 </head>
 <body>
 
-    <!-- Écran de Mot de Passe -->
     <div id="auth-overlay">
         <div class="auth-card">
             <div class="auth-icon">🔮</div>
@@ -539,41 +548,41 @@
             <div class="slot slot-3" data-index="2">
                 <div class="slot-info">
                     <div class="slot-title">III. Le Conseil</div>
-                    <div class="slot-desc">Sagesse des Bâtisseurs</div>
+                    <div class="slot-desc">Sagesse (Haut)</div>
                 </div>
             </div>
 
             <div class="slot slot-1" data-index="0">
                 <div class="slot-info">
                     <div class="slot-title">I. L'Éclat Présent</div>
-                    <div class="slot-desc">La Situation</div>
+                    <div class="slot-desc">Situation (Gauche)</div>
                 </div>
             </div>
 
             <div class="slot slot-5" data-index="4">
                 <div class="slot-info">
                     <div class="slot-title">V. L'Équilibre</div>
-                    <div class="slot-desc">La Synthèse</div>
+                    <div class="slot-desc">Synthèse (Milieu)</div>
                 </div>
             </div>
 
             <div class="slot slot-2" data-index="1">
                 <div class="slot-info">
                     <div class="slot-title">II. L'Ombre</div>
-                    <div class="slot-desc">Vents Contraires</div>
+                    <div class="slot-desc">Obstacle (Droite)</div>
                 </div>
             </div>
 
             <div class="slot slot-4" data-index="3">
                 <div class="slot-info">
                     <div class="slot-title">IV. La Volonté</div>
-                    <div class="slot-desc">L'Aboutissement</div>
+                    <div class="slot-desc">Résultat (Bas)</div>
                 </div>
             </div>
         </div>
 
         <div class="synthesis-box" id="synthesis-container" style="display: none;">
-            <div class="synthesis-title">🔮 Révélation & Réponse de la Liseuse d'Éclat</div>
+            <div class="synthesis-title">✨ Interprétation de la Liseuse d'Éclat</div>
             <div class="synthesis-text" id="synthesis-text"></div>
         </div>
 
@@ -592,10 +601,8 @@
     <div class="toast" id="toast">Copié !</div>
 
     <script>
-        // Clé d'accès définie
         const SECRET_KEY = "Gemletarot";
 
-        // Vérification de l'accès
         const authOverlay = document.getElementById('auth-overlay');
         const authPass = document.getElementById('auth-pass');
         const authBtn = document.getElementById('auth-btn');
@@ -619,20 +626,20 @@
             if (e.key === 'Enter') checkAuth();
         });
 
-        // Deck de Cartes
+        // Deck clair avec significations directes
         const deck = [
-            { id: 0, name: "Le Miroir Magique", num: "I", icon: "✨", desc: "Protection suprême, annulation des énergies négatives, réussite assurée.", rp: "Votre Éclat est protégé contre les ombres. Le succès vous est acquis.", color: "#ffd166" },
-            { id: 1, name: "La Trahison", num: "II", icon: "🗡️", desc: "Non-dits, déception, illusions brisées ou personne de mauvaise foi.", rp: "Attention aux faux semblants parmi vos alliés à l'Académie.", color: "#d90429" },
-            { id: 2, name: "Le Boomerang", num: "III", icon: "🪃", desc: "Retour de situation, conséquences des actes passés, effet miroir.", rp: "Ce que vous avez semé lors des dernières Floraisons vous revient.", color: "#4895ef" },
-            { id: 3, name: "L'Échec", num: "IV", icon: "🍂", desc: "Obstacle, besoin de changer de trajectoire, leçon constructive.", rp: "Une voie fermée pour vous réorienter vers un Éveil plus pur.", color: "#6c757d" },
-            { id: 4, name: "La Correspondance", num: "V", icon: "📜", desc: "Messages, nouvelles imminentes, besoin de clarifier par les mots.", rp: "Une missive de haut rang ou un signe transmis par les Vents.", color: "#4cc9f0" },
-            { id: 5, name: "L'Éclat Présent", num: "VI", icon: "💎", desc: "Situation actuelle, vérité nue, alignement du Cristal de cœur.", rp: "Votre état d'esprit actuel face aux défis de l'Arche.", color: "#9d4edd" },
-            { id: 6, name: "Le Carrefour", num: "VII", icon: "🔀", desc: "Choix décisif, plusieurs chemins possibles, hésitation.", rp: "Une bifurcation importante entre votre Maison et votre destin personnel.", color: "#fb8500" },
-            { id: 7, name: "L'Enfermement", num: "VIII", icon: "🏰", desc: "Isolement, sentiment de blocage, repli sur soi nécessaire ou subi.", rp: "Pris au piège par vos propres doutes ou à l'écart du Conseil.", color: "#560bad" },
-            { id: 8, name: "La Victoire", num: "IX", icon: "🏆", desc: "Triomphe, reconnaissance, accomplissement des objectifs.", rp: "Couronnement de vos efforts et respect gagné auprès des vôtres.", color: "#70e000" },
-            { id: 9, name: "L'Arbre des Floraisons", num: "X", icon: "🌳", desc: "Croissance, stabilité, ancrage dans la communauté, abondance.", rp: "Bénédiction de la Gem assurant la pérennité de votre foyer.", color: "#2a9d8f" },
-            { id: 10, name: "Le Grand Exil", num: "XI", icon: "🌑", desc: "Fin d'un cycle, départ nécessaire, métamorphose profonde.", rp: "Rupture irréversible avec le Crépuscule.", color: "#3f37c9" },
-            { id: 11, name: "L'Éveil de la Gem", num: "XII", icon: "🔮", desc: "Seconde chance, révélation spirituelle, éclosion du potentiel.", rp: "Votre puissance arcanique s'apprête à se manifester pleinement.", color: "#f72585" }
+            { id: 0, name: "Le Miroir Magique", num: "I", icon: "✨", desc: "Protection absolue. Tout obstacle ou mauvaise intention se brisera net.", rp: "Protection totale et succès assuré.", color: "#ffd166" },
+            { id: 1, name: "La Trahison", num: "II", icon: "🗡️", desc: "Méfiez-vous des promesses. Quelqu'un masque ses réelles intentions.", rp: "Attention aux faux alliés et aux mensonges.", color: "#d90429" },
+            { id: 2, name: "Le Boomerang", num: "III", icon: "🪃", desc: "Retour de bâton. Vous récoltez exactement ce que vous avez semé.", rp: "Les actes passés refont surface.", color: "#4895ef" },
+            { id: 3, name: "L'Échec", num: "IV", icon: "🍂", desc: "Blocage temporaire. La voie actuelle n'est pas la bonne.", rp: "Nécessité de changer de plan immédiatement.", color: "#6c757d" },
+            { id: 4, name: "La Correspondance", num: "V", icon: "📜", desc: "Nouvelles imminentes. Une décision ou un message va tout débloquer.", rp: "Une communication ou une lettre va arriver.", color: "#4cc9f0" },
+            { id: 5, name: "L'Éclat Présent", num: "VI", icon: "💎", desc: "Moment de vérité. Vous êtes au centre des attentions et du destin.", rp: "Clarté et alignement de votre situation.", color: "#9d4edd" },
+            { id: 6, name: "Le Carrefour", num: "VII", icon: "🔀", desc: "Hesitation face à deux choix. Il faut trancher sans regarder en arrière.", rp: "Un choix crucial doit être fait.", color: "#fb8500" },
+            { id: 7, name: "L'Enfermement", num: "VIII", icon: "🏰", desc: "Sentiment d'être coincé. L'isolement vous empêche d'avancer.", rp: "Vous vous isolez trop des autres.", color: "#560bad" },
+            { id: 8, name: "La Victoire", num: "IX", icon: "🏆", desc: "Succès éclatant. La réussite est garantie si vous maintenez l'effort.", rp: "Triomphe et honneur accordés.", color: "#70e000" },
+            { id: 9, name: "L'Arbre des Floraisons", num: "X", icon: "🌳", desc: "Stabilité et prospérité durable. Ancrage solide.", rp: "Abondance et protection de votre foyer.", color: "#2a9d8f" },
+            { id: 10, name: "Le Grand Exil", num: "XI", icon: "🌑", desc: "Page qui se tourne. Départ ou fin d'une relation/d'un chapitre.", rp: "Fin définitive d'un cycle.", color: "#3f37c9" },
+            { id: 11, name: "L'Éveil de la Gem", num: "XII", icon: "🔮", desc: "Transformation spirituelle majeure. Révélation d'un grand pouvoir.", rp: "Éclosion de votre plein potentiel.", color: "#f72585" }
         ];
 
         const slots = document.querySelectorAll('.slot');
@@ -654,11 +661,11 @@
         let currentDraw = [null, null, null, null, null];
 
         const slotTitles = [
-            "I. L'Éclat Présent",
-            "II. L'Ombre (Vents Contraires)",
-            "III. Le Conseil (Sagesse)",
-            "IV. La Volonté (Aboutissement)",
-            "V. L'Équilibre (Synthèse)"
+            "1. Gauche (La Situation)",
+            "2. Droite (L'Obstacle)",
+            "3. Haut (Le Conseil)",
+            "4. Bas (Le Résultat)",
+            "5. Milieu (La Synthèse)"
         ];
 
         function getRandomCards(count) {
@@ -720,8 +727,20 @@
             if (activeCards.length === 5) {
                 synthesisContainer.style.display = 'block';
                 const questionText = questionInput.value.trim();
-                let pref = questionText ? `En réponse à : <em>« ${questionText} »</em><br><br>` : '';
-                synthesisText.innerHTML = `${pref}L'Éclat actuel (${currentDraw[0].name}) fait face aux déséquilibres de (${currentDraw[1].name}). Le Conseil préconise la sagesse de (${currentDraw[2].name}) pour accomplir (${currentDraw[3].name}). La clé de voûte et la réponse finale résident dans <strong>${currentDraw[4].name}</strong>.`;
+                let pref = questionText ? `📌 **Question posée :** <em>« ${questionText} »</em><br><br>` : '';
+                
+                synthesisText.innerHTML = `
+                    ${pref}
+                    📍 **Situation actuelle (Gauche) :** ${currentDraw[0].name} — <em>${currentDraw[0].rp}</em><br>
+                    ⚠️ **Ce qui s'y oppose (Droite) :** ${currentDraw[1].name} — <em>${currentDraw[1].rp}</em><br>
+                    💡 **Ce qu'il faut faire (Haut) :** ${currentDraw[2].name} — <em>${currentDraw[2].rp}</em><br>
+                    🎯 **Où cela mène (Bas) :** ${currentDraw[3].name} — <em>${currentDraw[3].rp}</em>
+                    
+                    <div class="synthesis-highlight">
+                        🔑 **RÉPONSE FINALE (Milieu) : ${currentDraw[4].name}**<br>
+                        ${currentDraw[4].desc}
+                    </div>
+                `;
             } else {
                 synthesisContainer.style.display = 'none';
             }
@@ -746,7 +765,7 @@
             modalIcon.style.backgroundColor = `${card.color}22`;
             modalTitle.textContent = `${card.num} — ${card.name}`;
             modalDesc.textContent = card.desc;
-            modalRp.innerHTML = `<strong>Résonance d'Éclat :</strong> ${card.rp}`;
+            modalRp.innerHTML = `<strong>Résonance RP :</strong> ${card.rp}`;
             cardModal.style.display = 'flex';
         }
 
@@ -770,26 +789,21 @@
             }
 
             const qText = questionInput.value.trim();
-            let summary = "🔮 **TIRAGE DE GEMMANCIE — LA LISEUSE D'ÉCLAT** 🔮\n";
+            let summary = "🔮 **TIRAGE EN CROIX — GEMMANCIE** 🔮\n";
             if (qText) {
                 summary += `❓ **Question :** *${qText}*\n\n`;
             } else {
                 summary += "\n";
             }
 
-            currentDraw.forEach((card, index) => {
-                if (card) {
-                    summary += `**${slotTitles[index]}** : ${card.name}\n`;
-                    summary += `↳ *${card.rp}*\n`;
-                }
-            });
-
-            if (currentDraw.filter(c => c !== null).length === 5) {
-                summary += `\n✨ **Réponse globale :** L'équilibre réside dans la résonance de **${currentDraw[4].name}**.`;
-            }
+            summary += `1️⃣ **Situation (Gauche)** : ${currentDraw[0].name} (${currentDraw[0].rp})\n`;
+            summary += `2️⃣ **Obstacle (Droite)** : ${currentDraw[1].name} (${currentDraw[1].rp})\n`;
+            summary += `3️⃣ **Conseil (Haut)** : ${currentDraw[2].name} (${currentDraw[2].rp})\n`;
+            summary += `4️⃣ **Résultat (Bas)** : ${currentDraw[3].name} (${currentDraw[3].rp})\n\n`;
+            summary += `✨ **RÉPONSE FINALE (Milieu)** : **${currentDraw[4].name}**\n↳ ${currentDraw[4].desc}`;
 
             navigator.clipboard.writeText(summary).then(() => {
-                showToast("Résumé RP copié !");
+                showToast("Résumé copié !");
             });
         });
 
