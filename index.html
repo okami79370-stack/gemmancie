@@ -365,34 +365,46 @@
             line-height: 1.1;
         }
 
-        /* Guide de lecture RP instantané pour les débutants */
+        /* Guide de lecture RP officiel et clair */
         .speech-guide {
             background: var(--bg-secondary);
             border: 2px solid var(--gold-primary);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.8rem;
             max-width: 750px;
             margin: 0 auto;
             width: 100%;
-            box-shadow: 0 0 30px rgba(243, 206, 114, 0.15);
+            box-shadow: 0 0 35px rgba(243, 206, 114, 0.2);
             display: none;
         }
 
         .speech-guide-title {
             font-family: 'Cinzel Decorative', serif;
             color: var(--gold-primary);
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
             text-align: center;
-            border-bottom: 1px solid rgba(243, 206, 114, 0.2);
-            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(243, 206, 114, 0.25);
+            padding-bottom: 0.5rem;
         }
 
         .speech-guide-text {
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 0.98rem;
+            line-height: 1.8;
             color: var(--text-light);
-            text-align: center;
+            text-align: left;
+        }
+
+        .speech-guide-text p {
+            margin-bottom: 0.8rem;
+        }
+
+        .verdict-box {
+            background: rgba(243, 206, 114, 0.1);
+            border-left: 4px solid var(--gold-primary);
+            padding: 0.8rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0 6px 6px 0;
             font-style: italic;
         }
 
@@ -568,9 +580,9 @@
             </div>
         </div>
 
-        <!-- Guide de lecture RP instantané pour les débutants -->
+        <!-- Guide de parole officiel et complet pour les débutants -->
         <div class="speech-guide" id="speech-guide">
-            <div class="speech-guide-title">✨ Guide de Parole RP & Synthèse Globale</div>
+            <div class="speech-guide-title">📜 Guide de Parole Officiel (Prêt à dire au client)</div>
             <div class="speech-guide-text" id="speech-guide-text"></div>
         </div>
 
@@ -613,42 +625,6 @@
         authPass.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') checkAuth();
         });
-
-        // Bruit discret de carte/page qui se tourne (volume très doux, effet papier/carton)
-        function playCardFlipSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-
-                const bufferSize = audioCtx.sampleRate * 0.05; // 50ms (très court)
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2); // Atténuation naturelle
-                }
-
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.setValueAtTime(800, audioCtx.currentTime); // Fréquence feutrée style papier
-                filter.Q.setValueAtTime(0.8, audioCtx.currentTime);
-
-                const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime); // Volume bas et agréable
-
-                noise.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                noise.start();
-            } catch (e) {
-                // Silencieux si non interactif
-            }
-        }
 
         // Les 53 cartes officielles de l'Oracle des Miroirs
         const deck = [
@@ -752,9 +728,6 @@
                 <div class="card-name">${card.name}</div>
             `;
 
-            // Déclenche le son discret de page/carte
-            playCardFlipSound();
-
             setTimeout(() => {
                 slot.classList.add('revealed');
             }, 50);
@@ -765,18 +738,26 @@
         }
 
         function updateSpeechGuide() {
-            const question = questionInput.value.trim() ? `concernant votre intention (« ${questionInput.value.trim()} »)` : "sur votre situation actuelle";
+            const question = questionInput.value.trim() ? `concernant votre intention : « ${questionInput.value.trim()} »` : "sur votre situation actuelle";
             const situation = currentDraw[0]; // I
             const obstacle = currentDraw[1];  // II
             const advice = currentDraw[2];    // III
             const future = currentDraw[3];    // IV
             const synthesis = currentDraw[4]; // V
 
-            let speech = `« En écoutant les échos des arcanes ${question}, voici ce qui se dessine : `;
-            speech += `Votre situation présente est ancrée dans <strong>${situation.name}</strong> (${situation.rp.toLowerCase()}), mais vous butez sur un obstacle : <strong>${obstacle.name}</strong> (${obstacle.rp.toLowerCase()}). `;
-            speech += `Si vous continuez sur cette voie, l'avenir vous mènera vers <strong>${future.name}</strong> (${future.rp.toLowerCase()}). `;
-            speech += `Pour changer la donne ou réussir, le conseil à suivre est le suivant : <em>${advice.rp}</em>. `;
-            speech += `En clair, le verdict et la réponse définitive apportés par les cartes se résument par <strong>${synthesis.name}</strong> : <strong>${synthesis.rp}</strong> »`;
+            // Détermination d'une tendance claire Oui/Non/Action
+            let orientation = "Les cartes penchent vers une issue favorable si vous agissez avec méthode.";
+            if (["Échec", "Séparation", "Trahison", "Enfermement", "Accusation", "Jalousie", "Fatalité"].includes(synthesis.name)) {
+                orientation = "Le verdict est clair : c'est un <strong>NON</strong> ou une mise en garde sérieuse. Il ne faut pas foncer tête baissée.";
+            } else if (["Victoire", "Chance", "Amour", "Réunion", "Fécondité", "Naissance", "Joie", "Ouverture", "Cadeau"].includes(synthesis.name)) {
+                orientation = "Le verdict est formel : c'est un <strong>OUI</strong> franc ou une validation totale de votre démarche.";
+            }
+
+            let speech = `<p>« Écoutez bien ce que révèlent les arcanes ${question} :</p>`;
+            speech += `<p>• <strong>Ce qui se joue actuellement :</strong> Vous êtes bloqué dans une dynamique de <em>${situation.name.toLowerCase()}</em> (${situation.rp.toLowerCase()}), entravé par l'obstacle du passé : <em>${obstacle.name.toLowerCase()}</em> (${obstacle.rp.toLowerCase()}).</p>`;
+            speech += `<p>• <strong>Ce qui va se passer (Futur) :</strong> Si vous ne changez rien, la situation évoluera vers <em>${future.name.toLowerCase()}</em> (${future.rp.toLowerCase()}).</p>`;
+            speech += `<p>• <strong>Ce qu'il faut faire (Conseil) :</strong> Pour redresser la barre, vous devez appliquer cette directive : <em>${advice.rp}</em>.</p>`;
+            speech += `<div class="verdict-box"><strong>VERDICT OFFICIEL & RÉPONSE :</strong><br>${orientation}<br>La synthèse de votre tirage est portée par <strong>${synthesis.name}</strong> : <em>${synthesis.rp}</em>.</div></p>`;
 
             speechGuideText.innerHTML = speech;
             speechGuide.style.display = 'block';
