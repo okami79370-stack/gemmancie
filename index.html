@@ -42,6 +42,82 @@
             overflow-x: hidden;
         }
 
+        /* Ecran de verrouillage par mot de passe */
+        #auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            background-image: radial-gradient(circle at 50% 50%, rgba(157, 78, 221, 0.25) 0%, transparent 70%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .auth-card {
+            background: rgba(19, 13, 36, 0.95);
+            border: 2px solid var(--gold-primary);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(243, 206, 114, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .auth-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.6rem;
+            color: var(--gold-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(10, 6, 18, 0.8);
+            border: 1px solid rgba(243, 206, 114, 0.4);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            color: var(--gold-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(243, 206, 114, 0.3);
+        }
+
+        .auth-error {
+            color: #d90429;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
         header {
             text-align: center;
             padding: 2rem 1rem 1rem;
@@ -80,7 +156,6 @@
             gap: 2rem;
         }
 
-        /* Question Box */
         .question-box {
             background: rgba(19, 13, 36, 0.8);
             border: 1px solid var(--border-glow);
@@ -158,7 +233,6 @@
             color: var(--gold-light);
         }
 
-        /* Plateau de Tirage (3:5 Tarot Aspect Ratio) */
         .croix-layout {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -302,7 +376,6 @@
             line-height: 1.1;
         }
 
-        /* Section Réponse Unique en Bas */
         .synthesis-box {
             background: rgba(19, 13, 36, 0.85);
             border: 1px solid var(--accent-purple);
@@ -329,7 +402,6 @@
             text-align: center;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -433,6 +505,18 @@
 </head>
 <body>
 
+    <!-- Ecran de Mot de Passe -->
+    <div id="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-icon">🔮</div>
+            <h2 class="auth-title">GEMMANCIE</h2>
+            <p class="auth-subtitle">Accès restreint au Sanctuaire</p>
+            <input type="password" id="auth-pass" class="auth-input" placeholder="Entrez la Clé d'Accès..." autofocus>
+            <button class="btn" id="auth-btn" style="width: 100%;">Entrer</button>
+            <div class="auth-error" id="auth-error">Clé incorrecte. Les Arcanes vous refusent l'accès.</div>
+        </div>
+    </div>
+
     <header>
         <h1 class="header-title">GEMMANCIE</h1>
         <p class="header-subtitle">Sanctuaire de la Liseuse d'Éclat • Résonance des Arcans</p>
@@ -488,7 +572,6 @@
             </div>
         </div>
 
-        <!-- Réponse Globale Uniquement -->
         <div class="synthesis-box" id="synthesis-container" style="display: none;">
             <div class="synthesis-title">🔮 Révélation & Réponse de la Liseuse d'Éclat</div>
             <div class="synthesis-text" id="synthesis-text"></div>
@@ -496,7 +579,6 @@
 
     </div>
 
-    <!-- Modal au clic sur une carte -->
     <div class="modal" id="card-modal">
         <div class="modal-content">
             <span class="modal-close" id="modal-close">&times;</span>
@@ -510,6 +592,34 @@
     <div class="toast" id="toast">Copié !</div>
 
     <script>
+        // Mot de passe d'accès (à modifier selon tes préférences)
+        const SECRET_KEY = "Liseuse2026";
+
+        // Vérification de l'accès
+        const authOverlay = document.getElementById('auth-overlay');
+        const authPass = document.getElementById('auth-pass');
+        const authBtn = document.getElementById('auth-btn');
+        const authError = document.getElementById('auth-error');
+
+        function checkAuth() {
+            if (authPass.value === SECRET_KEY) {
+                localStorage.setItem('gemmancie_auth', 'true');
+                authOverlay.style.display = 'none';
+            } else {
+                authError.style.display = 'block';
+            }
+        }
+
+        if (localStorage.getItem('gemmancie_auth') === 'true') {
+            authOverlay.style.display = 'none';
+        }
+
+        authBtn.addEventListener('click', checkAuth);
+        authPass.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAuth();
+        });
+
+        // Deck de Cartes
         const deck = [
             { id: 0, name: "Le Miroir Magique", num: "I", icon: "✨", desc: "Protection suprême, annulation des énergies négatives, réussite assurée.", rp: "Votre Éclat est protégé contre les ombres. Le succès vous est acquis.", color: "#ffd166" },
             { id: 1, name: "La Trahison", num: "II", icon: "🗡️", desc: "Non-dits, déception, illusions brisées ou personne de mauvaise foi.", rp: "Attention aux faux semblants parmi vos alliés à l'Académie.", color: "#d90429" },
