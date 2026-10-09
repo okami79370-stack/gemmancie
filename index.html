@@ -158,7 +158,7 @@
             color: var(--gold-light);
         }
 
-        /* Disposition Croix avec cartes au format Tarot */
+        /* Plateau de Tirage (3:5 Tarot Aspect Ratio) */
         .croix-layout {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -184,7 +184,6 @@
             padding: 0.5rem;
             text-align: center;
             perspective: 1000px;
-            /* Proportion exacte d'une carte de Tarot (3:5) */
             aspect-ratio: 3 / 5;
             width: 100%;
             max-width: 200px;
@@ -303,86 +302,31 @@
             line-height: 1.1;
         }
 
-        /* Interprétations */
-        .interpretations {
-            background: rgba(19, 13, 36, 0.85);
-            border: 1px solid var(--border-glow);
-            border-radius: 8px;
-            padding: 1.8rem;
-            backdrop-filter: blur(5px);
-        }
-
-        .interpretations-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            color: var(--gold-primary);
-            margin-bottom: 1.2rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(243, 206, 114, 0.2);
-            padding-bottom: 0.5rem;
-        }
-
-        .interp-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .interp-item {
-            background: rgba(28, 20, 54, 0.6);
-            border-left: 3px solid var(--gold-primary);
-            padding: 1rem;
-            border-radius: 0 6px 6px 0;
-        }
-
-        .interp-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.4rem;
-        }
-
-        .interp-pos {
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            color: var(--gold-primary);
-            font-size: 0.9rem;
-        }
-
-        .interp-card-name {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-cyan);
-            font-size: 0.85rem;
-        }
-
-        .interp-body {
-            font-size: 0.85rem;
-            line-height: 1.4;
-            color: var(--text-light);
-        }
-
-        .interp-rp {
-            margin-top: 0.4rem;
-            font-style: italic;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            border-top: 1px dashed rgba(255,255,255,0.1);
-            padding-top: 0.3rem;
-        }
-
+        /* Section Réponse Unique en Bas */
         .synthesis-box {
-            margin-top: 1.5rem;
-            background: rgba(157, 78, 221, 0.1);
+            background: rgba(19, 13, 36, 0.85);
             border: 1px solid var(--accent-purple);
-            border-radius: 6px;
-            padding: 1.2rem;
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.15);
         }
 
         .synthesis-title {
             font-family: 'Cinzel', serif;
             color: var(--gold-primary);
-            font-size: 1.05rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.15rem;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(243, 206, 114, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .synthesis-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            text-align: center;
         }
 
         /* Modal */
@@ -480,9 +424,7 @@
         }
 
         @media (max-width: 600px) {
-            .croix-layout {
-                gap: 0.6rem;
-            }
+            .croix-layout { gap: 0.6rem; }
             .slot-title { font-size: 0.7rem; }
             .slot-desc { display: none; }
             .card-name { font-size: 0.65rem; }
@@ -546,22 +488,15 @@
             </div>
         </div>
 
-        <div class="interpretations">
-            <h2 class="interpretations-title">Révélations & Réponses des Cartes</h2>
-            <div class="interp-grid" id="interp-container">
-                <p style="text-align: center; color: var(--text-dim); font-style: italic;">
-                    Procédez au tirage pour faire parler le cristal et révéler les messages cachés.
-                </p>
-            </div>
-            <div class="synthesis-box" id="synthesis-container" style="display: none;">
-                <div class="synthesis-title">🔮 Synthèse globale de la Liseuse d'Éclat</div>
-                <div id="synthesis-text" style="font-size: 0.9rem; line-height: 1.5;"></div>
-            </div>
+        <!-- Réponse Globale Uniquement -->
+        <div class="synthesis-box" id="synthesis-container" style="display: none;">
+            <div class="synthesis-title">🔮 Révélation & Réponse de la Liseuse d'Éclat</div>
+            <div class="synthesis-text" id="synthesis-text"></div>
         </div>
 
     </div>
 
-    <!-- Modal carte en grand -->
+    <!-- Modal au clic sur une carte -->
     <div class="modal" id="card-modal">
         <div class="modal-content">
             <span class="modal-close" id="modal-close">&times;</span>
@@ -591,7 +526,6 @@
         ];
 
         const slots = document.querySelectorAll('.slot');
-        const interpContainer = document.getElementById('interp-container');
         const synthesisContainer = document.getElementById('synthesis-container');
         const synthesisText = document.getElementById('synthesis-text');
         const questionInput = document.getElementById('user-question');
@@ -653,7 +587,7 @@
                 slot.classList.add('revealed');
             }, 50);
 
-            updateInterpretations();
+            updateSynthesis();
         }
 
         function resetAll() {
@@ -667,43 +601,19 @@
                     </div>
                 `;
             });
-            updateInterpretations();
+            updateSynthesis();
         }
 
-        function updateInterpretations() {
+        function updateSynthesis() {
             const activeCards = currentDraw.filter(c => c !== null);
-            if (activeCards.length === 0) {
-                interpContainer.innerHTML = `
-                    <p style="text-align: center; color: var(--text-dim); font-style: italic;">
-                        Procédez au tirage pour faire parler le cristal et révéler les messages cachés.
-                    </p>
-                `;
-                synthesisContainer.style.display = 'none';
-                return;
-            }
-
-            let html = '';
-            currentDraw.forEach((card, index) => {
-                if (card) {
-                    html += `
-                        <div class="interp-item" style="border-left-color: ${card.color}">
-                            <div class="interp-header">
-                                <span class="interp-pos">${slotTitles[index]}</span>
-                                <span class="interp-card-name">${card.num} - ${card.name}</span>
-                            </div>
-                            <div class="interp-body">${card.desc}</div>
-                            <div class="interp-rp"><strong>Résonance RP :</strong> ${card.rp}</div>
-                        </div>
-                    `;
-                }
-            });
-            interpContainer.innerHTML = html;
-
+            
             if (activeCards.length === 5) {
                 synthesisContainer.style.display = 'block';
                 const questionText = questionInput.value.trim();
-                let pref = questionText ? `En réponse à la question : <em>« ${questionText} »</em><br><br>` : '';
-                synthesisText.innerHTML = `${pref}L'Éclat de la situation (${currentDraw[0].name}) se heurte à la résistance de (${currentDraw[1].name}). Le Conseil recommande de suivre la voie de (${currentDraw[2].name}) afin d'aboutir à (${currentDraw[3].name}). En synthèse, l'équilibre réside dans la maîtrise de <strong>${currentDraw[4].name}</strong>.`;
+                let pref = questionText ? `En réponse à : <em>« ${questionText} »</em><br><br>` : '';
+                synthesisText.innerHTML = `${pref}L'Éclat actuel (${currentDraw[0].name}) fait face aux déséquilibres de (${currentDraw[1].name}). Le Conseil préconise la sagesse de (${currentDraw[2].name}) pour accomplir (${currentDraw[3].name}). La clé de voûte et la réponse finale résident dans <strong>${currentDraw[4].name}</strong>.`;
+            } else {
+                synthesisContainer.style.display = 'none';
             }
         }
 
