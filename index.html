@@ -146,8 +146,38 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.8rem;
             width: 100%;
+        }
+
+        .question-section {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(243, 206, 114, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            max-width: 750px;
+            margin: 0 auto;
+            width: 100%;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .question-input {
+            width: 100%;
+            background: rgba(7, 4, 13, 0.8);
+            border: 1px solid var(--gold-dark);
+            border-radius: 4px;
+            padding: 0.7rem 1rem;
+            color: var(--gold-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .question-input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
         .controls {
@@ -335,6 +365,37 @@
             line-height: 1.1;
         }
 
+        /* Guide de lecture pour les débutants */
+        .speech-guide {
+            background: var(--bg-secondary);
+            border: 2px solid var(--gold-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 750px;
+            margin: 0 auto;
+            width: 100%;
+            box-shadow: 0 0 30px rgba(243, 206, 114, 0.15);
+            display: none;
+        }
+
+        .speech-guide-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(243, 206, 114, 0.2);
+            padding-bottom: 0.4rem;
+        }
+
+        .speech-guide-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-light);
+            text-align: center;
+            font-style: italic;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -455,6 +516,10 @@
 
     <div class="container">
         
+        <div class="question-section">
+            <input type="text" id="user-question" class="question-input" placeholder="Saisissez la question ou l'intention du consultant...">
+        </div>
+
         <div class="controls">
             <button class="btn" id="btn-draw">Effectuer le Tirage</button>
             <button class="btn btn-outline" id="btn-reset">Réinitialiser</button>
@@ -501,6 +566,12 @@
                     <div class="card-front"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Guide de lecture RP instantané pour les débutants -->
+        <div class="speech-guide" id="speech-guide">
+            <div class="speech-guide-title">✨ Guide de Parole RP (Prêt à l'emploi)</div>
+            <div class="speech-guide-text" id="speech-guide-text"></div>
         </div>
 
     </div>
@@ -600,10 +671,13 @@
         ];
 
         const slots = document.querySelectorAll('.slot');
+        const questionInput = document.getElementById('user-question');
         const btnDraw = document.getElementById('btn-draw');
         const btnReset = document.getElementById('btn-reset');
         const btnCopy = document.getElementById('btn-copy');
         const toast = document.getElementById('toast');
+        const speechGuide = document.getElementById('speech-guide');
+        const speechGuideText = document.getElementById('speech-guide-text');
 
         const cardModal = document.getElementById('card-modal');
         const modalClose = document.getElementById('modal-close');
@@ -643,10 +717,25 @@
             setTimeout(() => {
                 slot.classList.add('revealed');
             }, 50);
+
+            // Dès que toutes les cartes sont révélées, on met à jour le guide de parole RP
+            if (currentDraw.filter(c => c !== null).length === 5) {
+                updateSpeechGuide();
+            }
+        }
+
+        function updateSpeechGuide() {
+            const synthesis = currentDraw[4]; // Carte V (Réponse)
+            const advice = currentDraw[2];    // Carte III (Conseil)
+
+            speechGuideText.innerHTML = `« Le destin indique que votre réponse tourne autour de <strong>${synthesis.name}</strong> (${synthesis.rp.toLowerCase()}). Pour y parvenir ou redresser la situation, vous devez appliquer ce conseil : <em>${advice.rp}</em> »`;
+            speechGuide.style.display = 'block';
         }
 
         function resetAll() {
             currentDraw = [null, null, null, null, null];
+            questionInput.value = '';
+            speechGuide.style.display = 'none';
             slots.forEach((slot) => {
                 slot.classList.remove('revealed');
                 const front = slot.querySelector('.card-front');
@@ -696,12 +785,15 @@
                 return;
             }
 
-            let summary = `Tirage de Gemmancie\n`;
-            summary += `Situation actuelle (Présent) : ${currentDraw[0].name} (${currentDraw[0].rp})\n`;
-            summary += `Obstacle (Passé) : ${currentDraw[1].name} (${currentDraw[1].rp})\n`;
-            summary += `Conseil (Présent) : ${currentDraw[2].name} (${currentDraw[2].rp})\n`;
-            summary += `Résultat (Futur) : ${currentDraw[3].name} (${currentDraw[3].rp})\n`;
-            summary += `Synthèse / Réponse : ${currentDraw[4].name} (${currentDraw[4].rp})`;
+            const q = questionInput.value.trim() ? questionInput.value.trim() : "Intention libre du consultant";
+
+            let summary = `🔮 Tirage de Gemmancie\n`;
+            summary += `Intention : "${q}"\n\n`;
+            summary += `• Situation actuelle : ${currentDraw[0].name} (${currentDraw[0].rp})\n`;
+            summary += `• Obstacle : ${currentDraw[1].name} (${currentDraw[1].rp})\n`;
+            summary += `• Conseil : ${currentDraw[2].name} (${currentDraw[2].rp})\n`;
+            summary += `• Résultat : ${currentDraw[3].name} (${currentDraw[3].rp})\n`;
+            summary += `• Réponse / Synthèse : ${currentDraw[4].name} (${currentDraw[4].rp})`;
 
             navigator.clipboard.writeText(summary).then(() => {
                 showToast("Résumé copié !");
