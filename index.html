@@ -267,11 +267,11 @@
             z-index: 2;
         }
 
-        .slot-1 { grid-column: 1; grid-row: 2; } /* I: Gauche */
-        .slot-2 { grid-column: 3; grid-row: 2; } /* II: Droite */
-        .slot-3 { grid-column: 2; grid-row: 1; } /* III: Haut */
-        .slot-4 { grid-column: 2; grid-row: 3; } /* IV: Bas */
-        .slot-5 { grid-column: 2; grid-row: 2; } /* V: Milieu */
+        .slot-1 { grid-column: 1; grid-row: 2; }
+        .slot-2 { grid-column: 3; grid-row: 2; }
+        .slot-3 { grid-column: 2; grid-row: 1; }
+        .slot-4 { grid-column: 2; grid-row: 3; }
+        .slot-5 { grid-column: 2; grid-row: 2; }
 
         .card-inner {
             width: 100%;
@@ -378,7 +378,7 @@
 
         .synthesis-text {
             font-size: 0.95rem;
-            line-height: 1.7;
+            line-height: 1.8;
             color: var(--text-light);
         }
 
@@ -390,7 +390,7 @@
             margin-bottom: 1.2rem;
             text-align: center;
             color: var(--gold-light);
-            font-size: 1rem;
+            font-size: 1.05rem;
         }
 
         .modal {
@@ -609,20 +609,61 @@
             if (e.key === 'Enter') checkAuth();
         });
 
-        // Toutes les numérotations sont uniquement en Chiffres Romains (I, II, III...)
+        // Les 53 cartes officielles de l'Oracle des Miroirs en chiffres romains
         const deck = [
-            { id: 0, name: "Le Miroir Magique", num: "I", icon: "✨", desc: "Protection absolue. Tout obstacle ou mauvaise intention se brisera net.", rp: "Protection totale et succès assuré.", color: "#ffd166" },
-            { id: 1, name: "La Trahison", num: "II", icon: "🗡️", desc: "Méfiez-vous des promesses. Quelqu'un masque ses réelles intentions.", rp: "Attention aux faux alliés et aux mensonges.", color: "#d90429" },
-            { id: 2, name: "Le Boomerang", num: "III", icon: "🪃", desc: "Retour de bâton. Vous récoltez exactement ce que vous avez semé.", rp: "Les actes passés refont surface.", color: "#4895ef" },
-            { id: 3, name: "L'Échec", num: "IV", icon: "🍂", desc: "Blocage temporaire. La voie actuelle n'est pas la bonne.", rp: "Nécessité de changer de plan immédiatement.", color: "#6c757d" },
-            { id: 4, name: "La Correspondance", num: "V", icon: "📜", desc: "Nouvelles imminentes. Une décision ou un message va tout débloquer.", rp: "Une communication ou une lettre va arriver.", color: "#4cc9f0" },
-            { id: 5, name: "L'Éclat Présent", num: "VI", icon: "💎", desc: "Moment de vérité. Vous êtes au centre des attentions et du destin.", rp: "Clarté et alignement de votre situation.", color: "#9d4edd" },
-            { id: 6, name: "Le Carrefour", num: "VII", icon: "🔀", desc: "Hésitation face à deux choix. Il faut trancher sans regarder en arrière.", rp: "Un choix crucial doit être fait.", color: "#fb8500" },
-            { id: 7, name: "L'Enfermement", num: "VIII", icon: "🏰", desc: "Sentiment d'être coincé. L'isolement vous empêche d'avancer.", rp: "Vous vous isolez trop des autres.", color: "#560bad" },
-            { id: 8, name: "La Victoire", num: "IX", icon: "🏆", desc: "Succès éclatant. La réussite est garantie si vous maintenez l'effort.", rp: "Triomphe et honneur accordés.", color: "#70e000" },
-            { id: 9, name: "L'Arbre des Floraisons", num: "X", icon: "🌳", desc: "Stabilité et prospérité durable. Ancrage solide.", rp: "Abondance et protection de votre foyer.", color: "#2a9d8f" },
-            { id: 10, name: "Le Grand Exil", num: "XI", icon: "🌑", desc: "Page qui se tourne. Départ ou fin d'une relation/d'un chapitre.", rp: "Fin définitive d'un cycle.", color: "#3f37c9" },
-            { id: 11, name: "L'Éveil de la Gem", num: "XII", icon: "🔮", desc: "Transformation spirituelle majeure. Révélation d'un grand pouvoir.", rp: "Éclosion de votre plein potentiel.", color: "#f72585" }
+            { id: 0, name: "Hérédité", num: "I", icon: "🌳", desc: "Lignée, héritage, mémoire, transmission, généalogie.", rp: "Le poids du passé ou des origines.", color: "#8d99ae" },
+            { id: 1, name: "Fécondité", num: "II", icon: "🌱", desc: "Création, projet, abondance, naissance, expansion.", rp: "Une idée ou un projet s'apprête à germer.", color: "#2a9d8f" },
+            { id: 2, name: "Naissance", num: "III", icon: "🌸", desc: "Nouveauté, commencement, création, renouveau, espoir.", rp: "Un nouveau départ s'offre à vous.", color: "#e76f51" },
+            { id: 3, name: "Enfant", num: "IV", icon: "👶", desc: "Innocence, nouveauté, créativité, spontanéité, fragilité.", rp: "Approche naïve ou création pure.", color: "#f4a261" },
+            { id: 4, name: "Parole", num: "V", icon: "📜", desc: "Vérité, discours, promesse, communication, franchise.", rp: "Des mots échangés qui pèsent lourd.", color: "#4cc9f0" },
+            { id: 5, name: "Femme", num: "VI", icon: "👩", desc: "Intuition, réceptivité, douceur, influence, relation féminine.", rp: "Écoute intérieure ou figure féminine clé.", color: "#9d4edd" },
+            { id: 6, name: "Homme", num: "VII", icon: "👨", desc: "Action, force, rationalité, initiative, influence masculine.", rp: "Besoin d'action ou figure masculine clé.", color: "#4895ef" },
+            { id: 7, name: "Maison", num: "VIII", icon: "🏠", desc: "Foyer, sécurité, stabilité, ancrage, intimité.", rp: "Votre cocon ou votre stabilité menacée/renforcée.", color: "#e07a5f" },
+            { id: 8, name: "Famille", num: "IX", icon: "👨‍👩‍👧‍👦", desc: "Lien, racines, foyer, transmission, soutien.", rp: "L'entourage proche pèse sur la situation.", color: "#81b29a" },
+            { id: 9, name: "Santé", num: "X", icon: "🍵", desc: "Équilibre, bien-être, fatigue, guérison, vigilance.", rp: "Attention à votre énergie vitale.", color: "#f4f1de" },
+            { id: 10, name: "Rêve", num: "XI", icon: "🌙", desc: "Imagination, intuition, inspiration, inconscient, idéal.", rp: "Illusion ou inspiration profonde.", color: "#3f37c9" },
+            { id: 11, name: "Changement", num: "XII", icon: "🔄", desc: "Mouvement, évolution, nouveauté, mutation, transition.", rp: "Le vent tourne, préparez-vous au mouvement.", color: "#43aa8b" },
+            { id: 12, name: "Amour", num: "XIII", icon: "❤️", desc: "Passion, union, tendresse, relation, cœur.", rp: "Les sentiments dictent la marche à suivre.", color: "#d90429" },
+            { id: 13, name: "Amitié", num: "XIV", icon: "🤝", desc: "Soutien, loyauté, partage, confiance, alliance.", rp: "Comptez sur vos alliés fidèles.", color: "#ffb703" },
+            { id: 14, name: "Travail", num: "XV", icon: "⚖️", desc: "Effort, projet, carrière, discipline, responsabilité.", rp: "Implication nécessaire et rigueur.", color: "#6c757d" },
+            { id: 15, name: "Sexualité", num: "XVI", icon: "🔥", desc: "Désir, énergie vitale, passion, intimité, créativité.", rp: "Intensité brute et pulsions.", color: "#b7094c" },
+            { id: 16, name: "Projection", num: "XVII", icon: "🔮", desc: "Visualisation, anticipation, désir, imagination, illusion.", rp: "Attention à ne pas vous faire de films.", color: "#7209b7" },
+            { id: 17, name: "Argent", num: "XVIII", icon: "🪙", desc: "Ressources, travail, valeur, sécurité, matérialité.", rp: "Question de moyens ou de concrétisation.", color: "#ffd166" },
+            { id: 18, name: "Jalousie", num: "XIX", icon: "🐍", desc: "Rivalité, envie, possessivité, méfiance, compétition.", rp: "Des regards malveillants rôdent.", color: "#38b000" },
+            { id: 19, name: "Distance", num: "XX", icon: "🌐", desc: "Éloignement, absence, détachement, perspective, séparation.", rp: "Prenez du recul ou de la hauteur.", color: "#48cae4" },
+            { id: 20, name: "Séparation", num: "XXI", icon: "✂️", desc: "Rupture, éloignement, détachement, fin, transformation.", rp: "Coupure nette avec une situation.", color: "#ff595e" },
+            { id: 21, name: "Boomerang", num: "XXII", icon: "🪃", desc: "Retour, conséquence, karma, répétition, leçon.", rp: "Ce que vous avez fait vous revient en pleine face.", color: "#fb8500" },
+            { id: 22, name: "Loi", num: "XXIII", icon: "⚖️", desc: "Justice, règles, autorité, cadre, responsabilité.", rp: "Obligation de respecter les règles en vigueur.", color: "#003049" },
+            { id: 23, name: "Voyage", num: "XXIV", icon: "✈️", desc: "Déplacement, découverte, aventure, ouverture, évolution.", rp: "Changement d'horizon ou de perspective.", color: "#023e8a" },
+            { id: 24, name: "Fatalité", num: "XXV", icon: "⚡", desc: "Destin, inévitable, épreuve, fin de cycle, leçon de vie.", rp: "Événement extérieur impossible à bloquer.", color: "#212529" },
+            { id: 25, name: "Examen", num: "XXVI", icon: "📝", desc: "Test, évaluation, introspection, jugement, épreuve.", rp: "Vous êtes évalué ou testé par les autres.", color: "#6a040f" },
+            { id: 26, name: "Temps", num: "XXVII", icon: "⏳", desc: "Cycle, maturation, durée, patience, sagesse.", rp: "Il faut laisser faire le temps.", color: "#d4a373" },
+            { id: 27, name: "Correspondance", num: "XXVIII", icon: "✉️", desc: "Message, communication, échange, contact, nouvelles.", rp: "Une information importante va arriver.", color: "#90e0ef" },
+            { id: 28, name: "Contrat", num: "XXIX", icon: "✍️", desc: "Engagement, accord, partenariat, promesse, formalité.", rp: "Un engagement formel est scellé.", color: "#caf0f8" },
+            { id: 29, name: "Échec", num: "XXX", icon: "❌", desc: "Blocage, erreur, frustration, apprentissage, perte.", rp: "Une impasse temporaire ou une erreur de cap.", color: "#495057" },
+            { id: 30, name: "Évolution", num: "XXXI", icon: "📈", desc: "Progrès, apprentissage, transformation, croissance, avancée.", rp: "Montée en puissance progressive.", color: "#52b788" },
+            { id: 31, name: "Bouclier", num: "XXXII", icon: "🛡️", desc: "Protection, défense, prudence, secret, distance.", rp: "Protégez-vous et restez sur vos gardes.", color: "#1d3557" },
+            { id: 32, name: "Accusation", num: "XXXIII", icon: "🎯", desc: "Conflit, injustice, reproches, défensif, jugement.", rp: "On vous pointe du doigt à tort ou à raison.", color: "#e56b6f" },
+            { id: 33, name: "Verdict", num: "XXXIV", icon: "🔨", desc: "Décision, révélation, conséquence, vérité, justice.", rp: "La sentence tombe, le choix est définitif.", color: "#b5838d" },
+            { id: 34, name: "Clairvoyance", num: "XXXV", icon: "👁️", desc: "Intuition, lucidité, perception, guidance, révélation.",rp: "Vous voyez enfin clair dans le jeu des autres.", color: "#b79ced" },
+            { id: 35, name: "Enfermement", num: "XXXVI", icon: "🔒", desc: "Isolement, restriction, peur, limitation, enfermement mental.", rp: "Vous êtes prisonnier de vos propres barrières.", color: "#323031" },
+            { id: 36, name: "Étranger", num: "XXXVII", icon: "🌍", desc: "Nouveauté, ouverture, découverte, inconnu, voyage.", rp: "L'inconnu fait son entrée, sortez de votre zone de confort.", color: "#e9c46a" },
+            { id: 37, name: "Compromis", num: "XXXVIII", icon: "🤝", desc: "Entente, négociation, équilibre, ajustement, diplomatie.", rp: "Il faut couper la poire en deux.", color: "#f4a261" },
+            { id: 38, name: "Victoire", num: "XXXIX", icon: "🏆", desc: "Réussite, accomplissement, triomphe, mérite, satisfaction.", rp: "Le succès est au bout du chemin.", color: "#ffb703" },
+            { id: 39, name: "Ouverture", num: "XL", icon: "🚪", desc: "Opportunité, communication, accueil, dialogue, expansion.", rp: "Une porte s'ouvre, saisissez votre chance.", color: "#2a9d8f" },
+            { id: 40, name: "Instabilité", num: "XLI", icon: "🌊", desc: "Incertitude, changement rapide, agitation, déséquilibre, fragilité.", rp: "Terrain glissant, tout peut basculer.", color: "#457b9d" },
+            { id: 41, name: "Retard", num: "XLII", icon: "🐢", desc: "Patience, attente, temporisation, lenteur, obstacle.", rp: "Il va falloir ronger son frein.", color: "#606c38" },
+            { id: 42, name: "Trahison", num: "XLIII", icon: "🗡️", desc: "Déception, mensonge, rupture, perte de confiance, blessure.", rp: "Coup bas ou masque qui tombe.", color: "#d90429" },
+            { id: 43, name: "Carrefour", num: "XLIV", icon: "🔀", desc: "Choix, décision, orientation, transition, incertitude.", rp: "Une bifurcation majeure s'impose.", color: "#f77f00" },
+            { id: 44, name: "Retour", num: "XLV", icon: "↩️", desc: "Réconciliation, passé, reprise, répétition, retour karmique.", rp: "Une vieille histoire refait surface.", color: "#7209b7" },
+            { id: 45, name: "Chance", num: "XLVI", icon: "🍀", desc: "Opportunité, réussite, providence, hasard, coup de pouce.", rp: "La chance sourit aux audacieux.", color: "#38b000" },
+            { id: 46, name: "Joie", num: "XLVII", icon: "🎉", desc: "Bonheur, célébration, réussite, légèreté, satisfaction.", rp: "Un moment de répit et de plénitude.", color: "#ff006e" },
+            { id: 47, name: "Réunion", num: "XLVIII", icon: "👥", desc: "Rencontre, union, collaboration, retrouvaille, accord.", rp: "Rassemblement constructif.", color: "#3a86ff" },
+            { id: 48, name: "Tranquillité", num: "XLIX", icon: "🌿", desc: "Paix, repos, sérénité, harmonie, calme.", rp: "Retrouvez la paix intérieure.", color: "#55a630" },
+            { id: 49, name: "Cadeau", num: "L", icon: "🎁", desc: "Surprise, opportunité, gratitude, bienveillance, réceptivité.", rp: "Une belle surprise inattendue.", color: "#ffb703" },
+            { id: 50, name: "Culpabilité", num: "LI", icon: "⚖️", desc: "Remords, responsabilité, conscience, regret, poids.", rp: "Vous portez un fardeau moral trop lourd.", color: "#6c757d" },
+            { id: 51, name: "Miroir magique", num: "LII", icon: "✨", desc: "Intuition, révélation, vérité intérieure, transformation, pouvoir personnel.", rp: "Votre pouvoir personnel s'illumine.", color: "#f3ce72" },
+            { id: 52, name: "Miroir magnétique", num: "LIII", icon: "🧲", desc: "Attraction, lien, énergie, influence, résonance.", rp: "Vous attirez ce que vous vibrez.", color: "#9d4edd" }
         ];
 
         const slots = document.querySelectorAll('.slot');
@@ -694,13 +735,14 @@
                 
                 synthesisText.innerHTML = `
                     <div class="synthesis-highlight">
-                        <strong>Synthèse : ${currentDraw[4].name}</strong> — ${currentDraw[4].rp}
+                        <strong>Synthèse : ${currentDraw[4].name}</strong> — ${currentDraw[4].rp}<br>
+                        <em>${currentDraw[4].desc}</em>
                     </div>
                     
-                    <strong>Situation actuelle (Présent) :</strong> ${currentDraw[0].name} — ${currentDraw[0].rp}<br>
-                    <strong>Obstacle (Passé) :</strong> ${currentDraw[1].name} — ${currentDraw[1].rp}<br>
-                    <strong>Conseil (Présent) :</strong> ${currentDraw[2].name} — ${currentDraw[2].rp}<br>
-                    <strong>Résultat (Futur) :</strong> ${currentDraw[3].name} — ${currentDraw[3].rp}
+                    <strong>Situation actuelle (Présent) :</strong> ${currentDraw[0].name} — ${currentDraw[0].rp} (${currentDraw[0].desc})<br>
+                    <strong>Obstacle (Passé) :</strong> ${currentDraw[1].name} — ${currentDraw[1].rp} (${currentDraw[1].desc})<br>
+                    <strong>Conseil (Présent) :</strong> ${currentDraw[2].name} — ${currentDraw[2].rp} (${currentDraw[2].desc})<br>
+                    <strong>Résultat (Futur) :</strong> ${currentDraw[3].name} — ${currentDraw[3].rp} (${currentDraw[3].desc})
                 `;
             } else {
                 synthesisContainer.style.display = 'none';
@@ -749,11 +791,11 @@
                 return;
             }
 
-            let summary = `Situation actuelle (Présent) : ${currentDraw[0].name} — ${currentDraw[0].rp}\n`;
-            summary += `Obstacle (Passé) : ${currentDraw[1].name} — ${currentDraw[1].rp}\n`;
-            summary += `Conseil (Présent) : ${currentDraw[2].name} — ${currentDraw[2].rp}\n`;
-            summary += `Résultat (Futur) : ${currentDraw[3].name} — ${currentDraw[3].rp}\n`;
-            summary += `Synthèse : ${currentDraw[4].name} — ${currentDraw[4].rp}`;
+            let summary = `Synthèse : ${currentDraw[4].name} — ${currentDraw[4].rp}\n\n`;
+            summary += `Situation actuelle (Présent) : ${currentDraw[0].name} — ${currentDraw[0].rp} (${currentDraw[0].desc})\n`;
+            summary += `Obstacle (Passé) : ${currentDraw[1].name} — ${currentDraw[1].rp} (${currentDraw[1].desc})\n`;
+            summary += `Conseil (Présent) : ${currentDraw[2].name} — ${currentDraw[2].rp} (${currentDraw[2].desc})\n`;
+            summary += `Résultat (Futur) : ${currentDraw[3].name} — ${currentDraw[3].rp} (${currentDraw[3].desc})`;
 
             navigator.clipboard.writeText(summary).then(() => {
                 showToast("Résumé copié !");
