@@ -365,7 +365,7 @@
             line-height: 1.1;
         }
 
-        /* Guide de lecture pour les débutants */
+        /* Guide de lecture RP instantané pour les débutants */
         .speech-guide {
             background: var(--bg-secondary);
             border: 2px solid var(--gold-primary);
@@ -570,7 +570,7 @@
 
         <!-- Guide de lecture RP instantané pour les débutants -->
         <div class="speech-guide" id="speech-guide">
-            <div class="speech-guide-title">✨ Guide de Parole RP (Prêt à l'emploi)</div>
+            <div class="speech-guide-title">✨ Guide de Parole RP & Synthèse Globale</div>
             <div class="speech-guide-text" id="speech-guide-text"></div>
         </div>
 
@@ -614,6 +614,7 @@
             if (e.key === 'Enter') checkAuth();
         });
 
+        // Les 53 cartes officielles de l'Oracle des Miroirs
         const deck = [
             { id: 0, name: "Hérédité", num: "I", icon: "🌳", desc: "Lignée, héritage, mémoire, transmission, généalogie.", rp: "Le poids du passé ou des origines familiales influence l'esprit.", color: "#8d99ae" },
             { id: 1, name: "Fécondité", num: "II", icon: "🌱", desc: "Création, projet, abondance, naissance, expansion.", rp: "Une idée ou un projet s'apprête à germer avec succès.", color: "#2a9d8f" },
@@ -688,14 +689,15 @@
 
         let currentDraw = [null, null, null, null, null];
 
-        function getRandomCards(count) {
-            const shuffled = [...deck].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
+        function getShuffledDeck() {
+            return [...deck].sort(() => Math.random() - 0.5);
         }
 
         function drawAll() {
             resetAll();
-            const cards = getRandomCards(5);
+            const shuffled = getShuffledDeck();
+            const cards = shuffled.slice(0, 5);
+
             cards.forEach((card, index) => {
                 setTimeout(() => {
                     revealCard(index, card);
@@ -718,17 +720,27 @@
                 slot.classList.add('revealed');
             }, 50);
 
-            // Dès que toutes les cartes sont révélées, on met à jour le guide de parole RP
             if (currentDraw.filter(c => c !== null).length === 5) {
                 updateSpeechGuide();
             }
         }
 
         function updateSpeechGuide() {
-            const synthesis = currentDraw[4]; // Carte V (Réponse)
-            const advice = currentDraw[2];    // Carte III (Conseil)
+            const question = questionInput.value.trim() ? `concernant votre intention (« ${questionInput.value.trim()} »)` : "sur votre situation actuelle";
+            const situation = currentDraw[0]; // I
+            const obstacle = currentDraw[1];  // II
+            const advice = currentDraw[2];    // III
+            const future = currentDraw[3];    // IV
+            const synthesis = currentDraw[4]; // V
 
-            speechGuideText.innerHTML = `« Le destin indique que votre réponse tourne autour de <strong>${synthesis.name}</strong> (${synthesis.rp.toLowerCase()}). Pour y parvenir ou redresser la situation, vous devez appliquer ce conseil : <em>${advice.rp}</em> »`;
+            // Synthèse narrative complète, claire et adaptée au client
+            let speech = `« En écoutant les échos des arcanes ${question}, voici ce qui se dessine : `;
+            speech += `Votre situation présente est ancrée dans <strong>${situation.name}</strong> (${situation.rp.toLowerCase()}), mais vous butez sur un obstacle : <strong>${obstacle.name}</strong> (${obstacle.rp.toLowerCase()}). `;
+            speech += `Si vous continuez sur cette voie, l'avenir vous mènera vers <strong>${future.name}</strong> (${future.rp.toLowerCase()}). `;
+            speech += `Pour changer la donne ou réussir, le conseil à suivre est le suivant : <em>${advice.rp}</em>. `;
+            speech += `En clair, le verdict et la réponse définitive apportés par les cartes se résument par <strong>${synthesis.name}</strong> : <strong>${synthesis.rp}</strong> »`;
+
+            speechGuideText.innerHTML = speech;
             speechGuide.style.display = 'block';
         }
 
@@ -747,7 +759,8 @@
             slot.addEventListener('click', () => {
                 const index = parseInt(slot.getAttribute('data-index'));
                 if (!currentDraw[index]) {
-                    const availableCards = deck.filter(c => !currentDraw.includes(c));
+                    const activeCards = currentDraw.filter(c => c !== null);
+                    const availableCards = deck.filter(c => !activeCards.includes(c));
                     const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
                     revealCard(index, randomCard);
                 } else {
